@@ -53,37 +53,4 @@ class Handler extends ExceptionHandler
             //
         });
     }
-
-    public function render($request, Throwable $exception)
-    {
-        if($exception instanceof NotFoundHttpException){
-            return 'method not allowed';
-        }
-
-        if ($exception instanceof TokenMismatchException && Auth::guest()) {
-            error_log('Error :' . $exception->getMessage());
-            abort(500);
-        }
-
-        if ($exception instanceof TokenMismatchException && getenv('APP_ENV') != 'local') {
-            return redirect()->back()->withInput();
-        }
-
-        if($exception instanceof \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException && getenv('APP_ENV') != 'local') {
-            error_log('Error :' . $exception->getMessage());
-            abort(404);
-        }
-
-        if(($exception instanceof PDOException || $exception instanceof QueryException) && getenv('APP_ENV') != 'local') {
-            error_log('Error :' . $exception->getMessage());
-            abort(500);
-        }
-
-        if ($exception instanceof ClientException) {
-            error_log('Error :' . $exception->getMessage());
-            abort(500);
-        }
-
-        return parent::render($request, $exception);
-    }
 }
