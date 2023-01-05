@@ -27,7 +27,7 @@ class Cookies
     public static function deleteToken($userId)
     {
         UsersTokens::where('user_id', $userId)->delete();
-        Cookie::forget('token');
+        Cookie::queue(Cookie::forget('token'));
 
         return 'success';
     }
