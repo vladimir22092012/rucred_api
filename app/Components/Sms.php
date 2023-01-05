@@ -3,7 +3,7 @@
 namespace App\Components;
 
 use App\Models\Users;
-use \Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 
 class Sms
 {
