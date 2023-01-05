@@ -16,7 +16,7 @@ class Cookies
         $minutes = 180;
         $response = new Response('Set Cookie');
         $response->withCookie(cookie('token', $newToken, $minutes));
-        return $response;
+        return $newToken;
     }
 
     public static function getToken()
