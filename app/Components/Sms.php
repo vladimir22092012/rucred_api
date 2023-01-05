@@ -4,9 +4,15 @@ namespace App\Components;
 
 use App\Models\Users;
 use Illuminate\Http\Request;
+use App\Models\Sms as SmsDB;
 
 class Sms
 {
+
+    protected static $login = 'RuCred';
+    protected static $password = 'Ee6-eEF-w7f';
+
+
     public function send(Request $request)
     {
         $phone = $request['phone'];
@@ -35,7 +41,11 @@ class Sms
             }
         }
 
-        $resp = Sms::send($phone, $message);
+        $phone = self::clear_phone($phone);
+
+        $url = 'http://smsc.ru/sys/send.php?login='.self::$login.'&psw='.self::$password.'&phones='.$phone.'&mes='.$message.'';
+
+        $resp = file_get_contents($url);
 
         $data = [
             'phone'    => $phone,
@@ -47,10 +57,22 @@ class Sms
             'created'  => date('Y-m-d H:i:s')
         ];
 
-        Sms::insert($data);
+        SmsDB::insert($data);
         $msg = 'Код отправлен';
 
 
         return $msg;
+    }
+
+    public static function clear_phone($phone)
+    {
+        $remove_symbols = [
+            '(',
+            ')',
+            '-',
+            ' ',
+            '+'
+        ];
+        return str_replace($remove_symbols, '', $phone);
     }
 }
