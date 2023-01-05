@@ -5,6 +5,7 @@ namespace App\Components;
 
 use App\Models\UsersTokens;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cookie;
 
 class Cookies
 {
@@ -26,6 +27,7 @@ class Cookies
     public static function deleteToken($userId)
     {
         UsersTokens::where('user_id', $userId)->delete();
+        Cookie::forget('token');
 
         return 'success';
     }
