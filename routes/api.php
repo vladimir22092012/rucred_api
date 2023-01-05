@@ -15,4 +15,4 @@ use App\Components\Sms;
 |
 */
 
-Route::post('/smsSend', [Sms::class, 'send']);
+Route::post('/sms/send', [Sms::class, 'send']);
