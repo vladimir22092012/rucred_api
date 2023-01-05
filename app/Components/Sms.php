@@ -19,9 +19,14 @@ class Sms
         $phone = $request['phone'];
         $type = $request['type'] ?? 'sms';
 
-        if (empty($phone)) {
-            return 'Не заполнен параметр phone';
-        }
+        if (empty($phone))
+            return ['status' => 400, 'resp' => 'Не заполнен параметр phone'];
+
+        $userId = Users::where('phone_mobile', $phone)->first();
+
+        if (empty($userId))
+            return ['status' => 500, 'resp' => 'Такого клиента нет'];
+
 
         $code = rand(1000, 9999);
 
@@ -81,14 +86,16 @@ class Sms
         if ($checkCode != $code)
             return 'Введеный код не совпадает с отправленным';
 
-        $userId = UsersTokens::select('user_id')->where('token', $token)->first();
+        $userToken = UsersTokens::where('token', $token)->first();
 
-        if (empty($userId))
-            Cookies::setToken();
-        else {
-            Cookies::deleteToken($userId);
-            Cookies::setToken();
+        if (empty($userToken)) {
+            $user = Users::where('phone_mobile', $phone)->first();
+        } else {
+            $user = Users::find($userToken->user_id);
+            Cookies::deleteToken($user->id);
         }
+
+        Cookies::setToken($user->id);
 
         return ['status' => 200, 'resp' => 'success'];
     }
