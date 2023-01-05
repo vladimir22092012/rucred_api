@@ -14,7 +14,7 @@ class Cookies
         $newToken = md5((string)$rand);
         $minutes = 180;
         $response = new Response('Set Cookie');
-        $response->withCookie(cookie('name', $newToken, $minutes));
+        $response->withCookie(cookie('token', $newToken, $minutes));
         return $response;
     }
 
