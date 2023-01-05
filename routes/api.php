@@ -14,5 +14,13 @@ use App\Components\Sms;
 |
 */
 
-Route::post('/sms/send', [Sms::class, 'send']);
-Route::post('/sms/check', [Sms::class, 'check']);
+Route::group([
+    'middleware' => ['cors'],
+    'namespace' => $this->namespace,
+    'prefix' => 'api',
+], function ($router) {
+    Route::post('/sms/send', [Sms::class, 'send']);
+    Route::post('/sms/check', [Sms::class, 'check']);
+});
+
+
