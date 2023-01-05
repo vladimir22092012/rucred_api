@@ -61,7 +61,7 @@ class Sms
         $msg = 'Код отправлен';
 
 
-        return $msg;
+        return ['status' => 200, 'message' => $msg];
     }
 
     public function check(Request $request)
