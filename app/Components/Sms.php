@@ -91,6 +91,8 @@ class Sms
                 Cookies::setToken();
             }
         }
+
+        return 'success';
     }
 
     public static function clear_phone($phone)
