@@ -56,9 +56,15 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $exception)
     {
+        $errors =
+            [
+                404 => ['status' => 404, 'message' => 'route is not exist'],
+                500 => ['status' => 500, 'message' => 'server error']
+            ];
+
         if ($this->isHttpException($exception))
             if ($exception->getStatusCode() == 404)
-                return response(['status' => $exception->getStatusCode(), 'message' => 'route is not exist']);
+                return response($errors[$exception->getStatusCode()]);
 
 
         return parent::render($request, $exception);
