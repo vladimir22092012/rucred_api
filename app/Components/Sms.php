@@ -61,7 +61,7 @@ class Sms
         $msg = 'Код отправлен';
 
 
-        return ['status' => 200, 'message' => $msg];
+        return ['status' => 200, 'resp' => $msg];
     }
 
     public function check(Request $request)
@@ -90,7 +90,7 @@ class Sms
             Cookies::setToken();
         }
 
-        return ['status' => 200, 'message' => 'success'];
+        return ['status' => 200, 'resp' => 'success'];
     }
 
     public static function clear_phone($phone)
