@@ -81,18 +81,16 @@ class Sms
         if ($checkCode != $code)
             return 'Введеный код не совпадает с отправленным';
 
-        if (!empty($token)) {
-            $userId = UsersTokens::select('user_id')->where('token', $token)->first();
+        $userId = UsersTokens::select('user_id')->where('token', $token)->first();
 
-            if (empty($userId))
-                Cookies::setToken();
-            else {
-                Cookies::deleteToken($userId);
-                Cookies::setToken();
-            }
+        if (empty($userId))
+            Cookies::setToken();
+        else {
+            Cookies::deleteToken($userId);
+            Cookies::setToken();
         }
 
-        return 'success';
+        return ['status' => 200, 'message' => 'success'];
     }
 
     public static function clear_phone($phone)
