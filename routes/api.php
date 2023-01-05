@@ -14,6 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/v1/registration/main', function () {
+Route::post('/registration/main', function () {
     return 123;
 });
