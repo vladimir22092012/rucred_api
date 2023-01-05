@@ -58,7 +58,7 @@ class Handler extends ExceptionHandler
     {
         if ($this->isHttpException($exception))
             if ($exception->getStatusCode() == 404)
-                return response('route is exist');
+                return response('route is not exist');
 
 
         return parent::render($request, $exception);
