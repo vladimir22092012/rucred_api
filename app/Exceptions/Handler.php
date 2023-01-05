@@ -58,6 +58,8 @@ class Handler extends ExceptionHandler
     {
         $errors =
             [
+                400 => ['status' => 400, 'message' => 'params error'],
+                401 => ['status' => 401, 'message' => 'unauthorized'],
                 404 => ['status' => 404, 'message' => 'route is not exist'],
                 500 => ['status' => 500, 'message' => 'server error']
             ];
