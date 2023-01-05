@@ -3,11 +3,15 @@
 namespace App\Components;
 
 use App\Models\Users;
+use GuzzleHttp\Psr7\Request;
 
 class Sms
 {
-    public function send($phone, $type)
+    public function send(Request $request)
     {
+        $phone = $request['phone'];
+        $type  = $request['type'] ?? 'sms';
+
         if (empty($phone)) {
             return 'Не заполнен параметр phone';
         }
