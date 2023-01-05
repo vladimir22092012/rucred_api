@@ -15,5 +15,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/v1/registration/main', function () {
-    return view(123);
+    return 123;
 });
