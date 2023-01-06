@@ -22,6 +22,8 @@ class Sms
         if (empty($phone))
             return ['status' => 400, 'resp' => 'Не заполнен параметр phone'];
 
+        $phone = self::clear_phone($phone);
+
         $userId = Users::where('phone_mobile', $phone)->first();
 
         if (empty($userId))
@@ -45,8 +47,6 @@ class Sms
                 Mail::send($sendTo, $title, $htmlMsg);
             }
         }
-
-        $phone = self::clear_phone($phone);
 
         $url = 'http://smsc.ru/sys/send.php?login=' . self::$login . '&psw=' . self::$password . '&phones=' . $phone . '&mes=' . $message . '';
 
