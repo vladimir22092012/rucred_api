@@ -67,6 +67,6 @@ class Products
             }
         }
 
-        return (array)$result;
+        return ['status' => 200, 'resp' => (array)$result];
     }
 }
