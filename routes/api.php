@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Components\Sms;
+use App\Account\Profile;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +17,4 @@ use App\Components\Sms;
 
 Route::post('/sms/send', [Sms::class, 'send']);
 Route::post('/sms/check', [Sms::class, 'check']);
+Route::post('/lk/profile', [Profile::class, 'get']);
