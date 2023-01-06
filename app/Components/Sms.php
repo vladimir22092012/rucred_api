@@ -73,7 +73,6 @@ class Sms
     {
         $phone = $request['phone'];
         $code = $request['code'];
-        $token = $request->cookie('token');
 
         if (empty($phone))
             return 'Не заполнен параметр phone';
@@ -86,18 +85,7 @@ class Sms
         if ($checkCode != $code)
             return 'Введеный код не совпадает с отправленным';
 
-        $userToken = UsersTokens::where('token', $token)->first();
-
-        if (empty($userToken)) {
-            $user = Users::where('phone_mobile', $phone)->first();
-        } else {
-            $user = Users::find($userToken->user_id);
-            Cookies::deleteToken($user->id);
-        }
-
-        Cookies::setToken($user->id);
-
-        return ['status' => 200, 'resp' => 'success'];
+        return ['status' => 200, 'resp' => 'Код принят'];
     }
 
     public static function clear_phone($phone)
