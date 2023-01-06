@@ -18,12 +18,16 @@ class TokenCheck
     public function handle(Request $request, Closure $next)
     {
         $token = $request->cookie('token');
+        $validToken = 'valid';
+        $userToken = UsersTokens::where('token', $token)->orderBy('id', 'desc')->first();
 
-        if (!empty($token)) {
-            $aliveToken = UsersTokens::where('token', $token)->first();
+        if (empty($userToken))
+            $validToken = 'invalid';
 
-            if (!empty($aliveToken))
-                return $next($request);
-        }
+        if (!empty($userToken) && $userToken->is_expired == 1)
+            $validToken = 'invalid';
+
+        if ($validToken == 'valid')
+            return $next($request);
     }
 }

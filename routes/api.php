@@ -5,6 +5,7 @@ use App\Components\Sms;
 use App\Account\Profile;
 use App\Info\Products;
 use App\Components\Cookies;
+use App\Http\Middleware\TokenCheck;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,10 +21,13 @@ use App\Components\Cookies;
 Route::post('/sms/send', [Sms::class, 'send']);
 Route::post('/sms/check', [Sms::class, 'check']);
 
-Route::post('/lk/profile', [Profile::class, 'get']);
-
 Route::get('/info/products', [Products::class, 'get']);
 
 Route::post('/cookies/check_token', [Cookies::class, 'checkToken']);
 Route::post('/cookies/set_token', [Cookies::class, 'setToken']);
 Route::post('/cookies/do_expire_tokens/{userId}', [Cookies::class, 'doExpireTokens']);
+
+
+Route::middleware([TokenCheck::class])->group(function () {
+    Route::post('/lk/profile', [Profile::class, 'get']);
+});
