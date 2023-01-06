@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class Profile extends Account
 {
-    public function get(Request $request)
+    public static function get(Request $request)
     {
         $userId = self::getUserByToken($request);
         $profile = Users::getProfile($userId);

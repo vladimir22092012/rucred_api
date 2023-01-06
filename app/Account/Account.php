@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 abstract class Account
 {
-    public static function getUserByToken(Request $request)
+    public static function getUserByToken($request)
     {
         $token = $request->cookie('token');
         $usersToken = UsersTokens::where('token', $token)->first();
@@ -15,4 +15,6 @@ abstract class Account
 
         return $userId;
     }
+
+   abstract static function get(Request $request);
 }
