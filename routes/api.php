@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Components\Sms;
 use App\Account\Profile;
+use App\Info\Products;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,3 +19,4 @@ use App\Account\Profile;
 Route::post('/sms/send', [Sms::class, 'send']);
 Route::post('/sms/check', [Sms::class, 'check']);
 Route::post('/lk/profile', [Profile::class, 'get']);
+Route::post('/info/products', [Products::class, 'get']);
