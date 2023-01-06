@@ -49,6 +49,6 @@ class Profile extends Account
             $res['contact'][$contact->type] = $contact->value;
         }
 
-        return $res;
+        return ['status' => 200, 'resp' => $res];
     }
 }
