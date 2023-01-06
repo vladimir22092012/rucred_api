@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Info;
+namespace App\Account;
 
-use App\Account\Account;
 use App\Models\Addresses;
 use App\Models\BankRequisite;
 use App\Models\Orders;

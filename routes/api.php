@@ -6,7 +6,7 @@ use App\Account\Profile;
 use App\Info\Products;
 use App\Components\Cookies;
 use App\Http\Middleware\TokenCheck;
-use App\Info\General;
+use App\Account\General;
 
 /*
 |--------------------------------------------------------------------------
