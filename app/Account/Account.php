@@ -15,6 +15,4 @@ abstract class Account
 
         return $userId;
     }
-
-   abstract static function get(Request $request);
 }
