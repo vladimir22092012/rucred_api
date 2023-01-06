@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'paths' => [],
+    'paths' => ['*'],
 
     'allowed_methods' => ['*'],
 
@@ -25,7 +25,7 @@ return [
 
     'allowed_headers' => ['*'],
 
-    'exposed_headers' => false,
+    'exposed_headers' => ['*'],
 
     'max_age' => 0,
 
