@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Components;
+namespace App\Entity;
 
 use App\Models\Users;
-use App\Models\UsersTokens;
 use Illuminate\Http\Request;
 use App\Models\Sms as SmsDB;
 

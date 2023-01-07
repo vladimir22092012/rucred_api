@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Account;
+namespace App\Steps;
 
 use App\Models\UsersTokens;
+use Illuminate\Http\Request;
 
-abstract class Account
+abstract class Steps
 {
     public static function getUserByToken($request)
     {
@@ -14,4 +15,6 @@ abstract class Account
 
         return $userId;
     }
+
+    abstract public function action(Request $request);
 }

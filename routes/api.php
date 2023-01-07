@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Components\Sms;
+use App\Entity\Sms;
 use App\Account\Profile;
 use App\Info\Products;
-use App\Components\Cookies;
+use App\Entity\Cookies;
 use App\Http\Middleware\TokenCheck;
 use App\Account\General;
 
