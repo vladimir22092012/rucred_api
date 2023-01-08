@@ -16,7 +16,7 @@ class Sms
     public function send(Request $request)
     {
         $phone = $request['phone'];
-        $type = $request['type'] ?? 'sms';
+        $step  = $request['step'];
 
         if (empty($phone))
             return ['status' => 400, 'resp' => 'Не заполнен параметр phone'];
@@ -25,15 +25,15 @@ class Sms
 
         $userId = Users::where('phone_mobile', $phone)->first();
 
-        if (empty($userId))
-            return ['status' => 500, 'resp' => 'Такого клиента нет'];
+        if (empty($userId) && $step == 'auth')
+            return ['status' => 404, 'resp' => 'Такого клиента нет'];
 
 
         $code = rand(1000, 9999);
 
         $message = "Ваш код подтверждения телефона на сайте Рестарт.Онлайн:  $code";
 
-        if ($type == 'reg-doc') {
+        if ($step == 'reg-doc') {
             $message = "Ваш код для подписания документов на сайте Рестарт.Онлайн:  $code";
 
             if (!empty($userId)) {
@@ -56,7 +56,7 @@ class Sms
             'user_id' => 0,
             'ip' => $_SERVER['REMOTE_ADDR'],
             'code' => $code,
-            'type' => $type,
+            'type' => 'sms',
             'response' => $resp,
             'created' => date('Y-m-d H:i:s')
         ];
