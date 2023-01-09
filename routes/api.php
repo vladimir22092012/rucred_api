@@ -33,6 +33,7 @@ Route::post('/cookies/do_expire_tokens/{userId}', [Cookies::class, 'doExpireToke
 Route::middleware([TokenCheck::class])->group(function () {
     Route::post('/lk/profile', [Profile::class, 'get']);
     Route::post('/lk/photos', [Photos::class, 'get']);
+    Route::get('/lk/photos', [Photos::class, 'get']);
     Route::post('/lk/general/get_stage', [General::class, 'getStage']);
     Route::post('/lk/general/get_user', [General::class, 'getUser']);
     Route::post('/lk/general/get_default_settlement', [General::class, 'getDefaultSettlement']);
