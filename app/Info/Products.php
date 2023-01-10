@@ -6,9 +6,9 @@ use App\Models\GroupsLoantypes;
 use App\Models\Loantypes;
 use Illuminate\Http\Request;
 
-class Products
+class Products extends Info
 {
-    public function get(Request $request)
+    public static function get(Request $request)
     {
         $group_id = $request->group_id ?? false;
 
