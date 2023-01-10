@@ -45,6 +45,19 @@ class Orders extends Model
         return $orders;
     }
 
+    public static function getActiveOrders($userId)
+    {
+        $orders = self::where('user_id', $userId)
+            ->where('status', 5)
+            ->get();
+
+        foreach ($orders as $key => $order) {
+            $orders[$key]->status = self::$orderStatuses[$order->status];
+        }
+
+        return $orders;
+    }
+
     public function user()
     {
         return $this->hasOne(Users::class, 'id','user_id');
