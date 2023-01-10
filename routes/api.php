@@ -48,5 +48,6 @@ Route::middleware([TokenCheck::class])->group(function () {
     Route::middleware([OrderOwner::class])->post('/lk/loan/operations', [LoansOperationsController::class, 'get']);
     Route::post('/lk/loans/active', [ActiveLoansController::class, 'get']);
 
-    Route::post('/lk/requisites', [RequisitesController::class, 'get']);
+    Route::post('/lk/requisites/get', [RequisitesController::class, 'get']);
+    Route::post('/lk/requisites/card/add', [RequisitesController::class, 'addCard']);
 });

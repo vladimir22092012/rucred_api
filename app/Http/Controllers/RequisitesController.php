@@ -43,4 +43,40 @@ class RequisitesController extends AccountController
 
         return ['status' => 200, 'resp' => $res];
     }
+
+    public function addCard(Request $request)
+    {
+        //Обязательные поля => текст ошибки
+        $requiredParams = [
+            'pan'       => 'Номер карты обязателен к заполнению',
+            'expdate'   => 'Дата окончания карты обязательна к заполнению',
+        ];
+
+        //Проверка на обязательные поля в запросе
+        foreach ($requiredParams as $key => $value) {
+            if (!isset($request[$key])) {
+                return ['status' => 500, 'resp' => $value];
+            }
+        }
+
+        $pan     = $request['pan'];
+        $expdate = $request['expdate'];
+        $default = $request['default'] ?? 0;
+
+        //Cбрасываем предудущий выбор карты по умолчанию
+        if ($default == 1) {
+            Cards::setZeroDefault(self::$userId);
+        }
+
+        $userData = [
+            'user_id'   => self::$userId,
+            'pan'       => $pan,
+            'expdate'   => $expdate,
+            'base_card' => $default
+        ];
+
+        Cards::insert($userData);
+
+        return ['status' => 200, 'resp' => 'Карта успешно добавлена'];
+    }
 }
