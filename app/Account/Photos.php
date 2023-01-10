@@ -9,7 +9,8 @@ class Photos extends Account
 {
     public function get(Request $request)
     {
-        $userId = self::getUserByToken($request);
+        $userId = self::$userId;
+
         $photos = Files::getPhotos($userId);
         $res = [];
 

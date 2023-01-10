@@ -3,16 +3,17 @@
 namespace App\Account;
 
 use App\Models\UsersTokens;
+use Illuminate\Http\Request;
 
 abstract class Account
 {
-    public static function getUserByToken($request)
+    protected static $userId;
+
+    public function __construct(Request $request)
     {
         $token = $request->header('Authorization');
 
         $usersToken = UsersTokens::where('token', $token)->first();
-        $userId = $usersToken->user_id;
-
-        return $userId;
+        self::$userId = $usersToken->user_id;
     }
 }
