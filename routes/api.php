@@ -10,6 +10,7 @@ use App\Account\General;
 use App\Account\Photos;
 use App\Http\Controllers\LoansOperationsController;
 use App\Account\Loans;
+use App\Http\Middleware\OrderOwner;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,5 +40,5 @@ Route::middleware([TokenCheck::class])->group(function () {
     Route::post('/lk/general/get_user', [General::class, 'getUser']);
     Route::post('/lk/general/get_default_settlement', [General::class, 'getDefaultSettlement']);
     Route::post('/lk/loans', [Loans::class, 'get']);
-    Route::post('/lk/loan/operations', [LoansOperationsController::class, 'get']);
+    Route::middleware([OrderOwner::class])->post('/lk/loan/operations', [LoansOperationsController::class, 'get']);
 });
