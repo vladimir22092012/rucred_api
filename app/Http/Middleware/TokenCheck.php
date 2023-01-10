@@ -29,7 +29,9 @@ class TokenCheck
 
         if ($validToken == 'valid')
             return $next($request);
+        elseif (empty($token))
+            return response()->json(['status' => 404, 'resp' => 'token is empty']);
         else
-            return response()->json(['status' => 404, 'resp' => 'token invalid']);
+            return response()->json(['status' => 401, 'resp' => 'token invalid']);
     }
 }
