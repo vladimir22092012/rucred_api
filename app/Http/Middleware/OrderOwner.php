@@ -25,7 +25,7 @@ class OrderOwner
 
         $order = Orders::find($orderId);
 
-        if($order->user_id != $userToken->user_id)
+        if($order->user_id == $userToken->user_id)
             return $next($request);
         else
             return response()->json(['status' => 404, 'resp' => 'it is not your order']);
