@@ -12,6 +12,7 @@ use App\Http\Controllers\LoansOperationsController;
 use App\Account\Loans;
 use App\Http\Middleware\OrderOwner;
 use App\Http\Controllers\ActiveLoansController;
+use App\Http\Controllers\RequisitesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,10 +38,15 @@ Route::post('/cookies/do_expire_tokens/{userId}', [Cookies::class, 'doExpireToke
 Route::middleware([TokenCheck::class])->group(function () {
     Route::post('/lk/profile', [Profile::class, 'get']);
     Route::post('/lk/photos', [Photos::class, 'get']);
+
     Route::post('/lk/general/get_stage', [General::class, 'getStage']);
     Route::post('/lk/general/get_user', [General::class, 'getUser']);
     Route::post('/lk/general/get_default_settlement', [General::class, 'getDefaultSettlement']);
+
     Route::post('/lk/loans', [Loans::class, 'get']);
     Route::post('/lk/loans/active', [ActiveLoansController::class, 'get']);
     Route::middleware([OrderOwner::class])->post('/lk/loan/operations', [LoansOperationsController::class, 'get']);
+    Route::post('/lk/loans/active', [ActiveLoansController::class, 'get']);
+
+    Route::post('/lk/requisites', [RequisitesController::class, 'get']);
 });
