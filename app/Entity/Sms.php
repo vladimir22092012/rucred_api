@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use App\Models\Users;
 use Illuminate\Http\Request;
-use App\Models\Sms as SmsDB;
+use App\Models\SmsMessages as SmsDB;
 
 class Sms
 {
