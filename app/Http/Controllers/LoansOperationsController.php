@@ -15,11 +15,6 @@ class LoansOperationsController extends AccountController
         if(!intval($orderId))
             return ['status' => 500, 'resp' => 'is not int'];
 
-        $order = Orders::find($orderId);
-
-        if($order->user_id != self::$userId)
-            return ['status' => 500, 'resp' => 'this order is not your'];
-
         $operations = LoansOperations::get($orderId);
 
         return ['status' => 200, 'resp' => $operations];
