@@ -10,9 +10,9 @@ use Illuminate\Http\Request;
 
 class Profile extends Account
 {
-    public static function get(Request $request)
+    public static function get()
     {
-        $userId = self::getUserByToken($request);
+        $userId = self::$userId;
         $profile = Users::getProfile($userId);
         $contacts = Contacts::getContacts($userId);
         $company = Companies::find($profile->company_id);

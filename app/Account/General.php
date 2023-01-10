@@ -11,10 +11,9 @@ use Illuminate\Http\Request;
 
 class General extends Account
 {
-    public function getStage(Request $request)
+    public function getStage()
     {
-        $userId = self::getUserByToken($request);
-
+        $userId = self::$userId;
         $user = Users::find($userId);
 
         if (!empty($user))
@@ -25,11 +24,9 @@ class General extends Account
         return ['status' => 200, 'resp' => $hasStage];
     }
 
-    public function getUser(Request $request)
+    public function getUser()
     {
-
-        $userId = self::getUserByToken($request);
-
+        $userId = self::$userId;
         $user = Users::find($userId);
 
         if (!empty($user)) {
