@@ -30,6 +30,6 @@ class TokenCheck
         if ($validToken == 'valid')
             return $next($request);
         else
-            return response()->json(['status' => 404, 'resp' => $token]);
+            return response()->json(['status' => 404, 'resp' => 'token invalid']);
     }
 }
