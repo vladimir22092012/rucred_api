@@ -31,6 +31,7 @@ class Loans extends Account
             $tariff = $tariff->name;
 
             $res[$key] = [
+                'orderId'     => $order->id,
                 'number'      => $orderNumber,
                 'tariff'      => $tariff,
                 'amount'      => $order->amount,
