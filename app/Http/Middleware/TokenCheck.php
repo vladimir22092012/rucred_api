@@ -17,7 +17,7 @@ class TokenCheck
      */
     public function handle(Request $request, Closure $next)
     {
-        $token = $request->cookie('token');
+        $token = $request->header('Authorization');
         $validToken = 'valid';
         $userToken = UsersTokens::where('token', $token)->orderBy('id', 'desc')->first();
 
@@ -30,6 +30,6 @@ class TokenCheck
         if ($validToken == 'valid')
             return $next($request);
         else
-            return response()->json(['status' => 404, 'resp' => 'token '.$validToken]);
+            return response()->json(['status' => 404, 'resp' => $token]);
     }
 }

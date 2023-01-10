@@ -8,7 +8,8 @@ abstract class Account
 {
     public static function getUserByToken($request)
     {
-        $token = $request->cookie('token');
+        $token = $request->header('Authorization');
+
         $usersToken = UsersTokens::where('token', $token)->first();
         $userId = $usersToken->user_id;
 

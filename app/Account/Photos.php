@@ -17,7 +17,7 @@ class Photos extends Account
             $res[$key] = [
                 'type'     => $photo->type,
                 'status'   => $photo->status,
-                'link'     => $_ENV['URL_CRM'].'files/users/' . $userId.'/'.$photo->name
+                'link'     => env('URL_CRM').'files/users/' . $userId.'/'.$photo->name
             ];
         }
 
