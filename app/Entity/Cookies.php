@@ -11,7 +11,7 @@ class Cookies
 {
     public static function checkToken(Request $request)
     {
-        $token = $request->cookie('token');
+        $token = $request->header('Authorization');
         $validToken = 'valid';
 
         $userToken = UsersTokens::where('token', $token)->orderBy('id', 'desc')->first();
