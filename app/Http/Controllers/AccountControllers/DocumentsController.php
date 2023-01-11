@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\AccountControllers;
 
 use App\Models\Contacts;
 use App\Models\Contracts;

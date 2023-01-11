@@ -7,13 +7,13 @@ use Illuminate\Http\Request;
 
 abstract class Steps
 {
-    public static function getUserByToken($request)
+    protected static $userId;
+
+    public function __construct(Request $request)
     {
         $token = $request->header('Authorization');
         $usersToken = UsersTokens::where('token', $token)->first();
-        $userId = $usersToken->user_id;
-
-        return $userId;
+        self::$userId = $usersToken->user_id;
     }
 
     abstract public function action(Request $request);

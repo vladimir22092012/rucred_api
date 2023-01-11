@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\AccountControllers;
 
 use App\Models\BankRequisite;
 use App\Models\Cards;
@@ -97,6 +97,11 @@ class RequisitesController extends AccountController
                 return ['status' => 500, 'resp' => $value];
             }
         }
+
+        $alreadyExist = BankRequisite::where('number', $request['number'])->first();
+
+        if(!empty($alreadyExist))
+            return ['status' => 500, 'resp' => 'Такой счет уже существует'];
 
         $number            = $request['number'];
         $name              = $request['name'];

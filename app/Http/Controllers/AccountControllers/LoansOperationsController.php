@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\AccountControllers;
 
 use App\Account\LoansOperations;
 use App\Models\Orders;

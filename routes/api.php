@@ -8,12 +8,12 @@ use App\Entity\Cookies;
 use App\Http\Middleware\TokenCheck;
 use App\Account\General;
 use App\Account\Photos;
-use App\Http\Controllers\LoansOperationsController;
+use App\Http\Controllers\AccountControllers\LoansOperationsController;
 use App\Account\Loans;
 use App\Http\Middleware\OrderOwner;
-use App\Http\Controllers\ActiveLoansController;
-use App\Http\Controllers\RequisitesController;
-use App\Http\Controllers\DocumentsController;
+use App\Http\Controllers\AccountControllers\ActiveLoansController;
+use App\Http\Controllers\AccountControllers\RequisitesController;
+use App\Http\Controllers\AccountControllers\DocumentsController;
 
 /*
 |--------------------------------------------------------------------------

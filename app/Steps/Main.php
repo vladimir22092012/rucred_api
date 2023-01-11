@@ -8,6 +8,6 @@ class Main extends Steps
 {
     public function action(Request $request)
     {
-        $userId = self::getUserByToken($request);
+        $userId = self::$userId;
     }
 }
