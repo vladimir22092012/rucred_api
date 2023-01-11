@@ -11,6 +11,26 @@ class MainController extends StepsController
 {
     public function action(Request $request)
     {
+
+        //Обязательные поля => текст ошибки
+        $requiredParams = [
+            'amount' => 'Сумма займа обязательна к заполнению',
+            'start_date' => 'Дата начала займа обязательна к заполнению',
+            'tariff_id' => 'ID тарифа обязательно к заполнению',
+            'birth' => 'Дата рождения обязательна к заполнению',
+            'birth_place' => 'Место рождения обязательно к заполнению',
+            'phone' => 'Телефон обязателен к заполнению',
+            'firstname' => 'Имя обязательно к заполнению',
+            'lastname' => 'Фамилия обязательна к заполнению',
+        ];
+
+        //Проверка на обязательные поля в запросе
+        foreach ($requiredParams as $key => $value) {
+            if (!isset($request[$key])) {
+                return ['status' => 500, 'resp' => $value];
+            }
+        }
+
         $amount = $request['amount'];            //Сумма займа
         $start_date = $request['start_date'];        //дата начала займа
         $tariff_id = $request['tariff_id'];         //id тарифа(loan_type)
