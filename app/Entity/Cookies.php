@@ -35,9 +35,13 @@ class Cookies
             if (empty($user))
                 return ['status' => 500, 'resp' => 'Такого юзера нет'];
             else
+            {
                 self::doExpireTokens($user->id);
+                $userId = $user->id;
+            }
 
-        }
+        }else
+            $userId = '';
 
         $rand = rand(1, 999999);
         $newToken = md5((string)$rand);
@@ -45,7 +49,7 @@ class Cookies
         $insert =
             [
                 'token' => $newToken,
-                'user_id' => $user->id
+                'user_id' => $userId
             ];
 
         UsersTokens::insert($insert);
