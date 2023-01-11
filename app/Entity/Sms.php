@@ -72,6 +72,7 @@ class Sms
     {
         $phone = $request['phone'];
         $code = $request['code'];
+        $step = $request['step'];
 
         if (empty($phone))
             return 'Не заполнен параметр phone';
@@ -86,11 +87,11 @@ class Sms
 
         $user = Users::where('phone_mobile', $phone)->first();
 
-        if(!empty($user) && $user->stage_registration == 8)
+        if(!empty($user) && $user->stage_registration == 8 && $step == 'reg')
             return ['status' => 201, 'resp' => 'Код принят'];
 
         if(!empty($user) && $user->stage_registration != 8)
-            return ['status' => 202, 'resp' => $user->stage_registration];
+            return ['status' => 202, 'resp' => $user->stage_registration && $step == 'reg'];
 
         return ['status' => 200, 'resp' => 'Код принят'];
     }
