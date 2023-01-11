@@ -16,7 +16,7 @@ class Cookies
 
         $userToken = UsersTokens::where('token', $token)->orderBy('id', 'desc')->first();
 
-        if(empty($userToken))
+        if (empty($userToken))
             $validToken = 'invalid';
 
         if (!empty($userToken) && $userToken->is_expired == 1)
@@ -29,11 +29,15 @@ class Cookies
     public static function setToken(Request $request)
     {
         $user = Users::where('phone_mobile', $request['phone'])->first();
+        $step = $request['step'];
 
-        if(empty($user))
-            return ['status' => 500, 'resp' => 'Такого юзера нет'];
+        if ($step == 'auth') {
+            if (empty($user))
+                return ['status' => 500, 'resp' => 'Такого юзера нет'];
+            else
+                self::doExpireTokens($user->id);
 
-        self::doExpireTokens($user->id);
+        }
 
         $rand = rand(1, 999999);
         $newToken = md5((string)$rand);
