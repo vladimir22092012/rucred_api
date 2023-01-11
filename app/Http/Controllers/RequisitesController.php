@@ -121,4 +121,18 @@ class RequisitesController extends AccountController
 
         return ['status' => 200, 'resp' => 'Счет успешно добавлен'];
     }
+
+    public function changeRequisites(Request $request)
+    {
+        $requisite_id = $request['requisite_id'];
+
+        if(empty($requisite_id))
+            return ['status' => 404, 'resp' => 'requisite_id is empty'];
+
+        BankRequisite::setZeroDefault(self::$userId);
+
+        BankRequisite::where('id', $requisite_id)->update(['default' => 1]);
+
+        return ['status' => 200, 'resp' => 'Данные сохранены'];
+    }
 }
