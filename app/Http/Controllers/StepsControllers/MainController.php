@@ -74,7 +74,8 @@ class MainController extends StepsController
             'phone_mobile' => $phone,
             'personal_number' => $number,
             'canSendOnec' => 1,
-            'canSendYaDisk' => 1
+            'canSendYaDisk' => 1,
+            'stage_registration' => 1
         ];
 
         $userId = Users::insertGetId($userData);
