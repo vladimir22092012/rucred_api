@@ -84,6 +84,14 @@ class Sms
         if ($checkCode != $code)
             return 'Введеный код не совпадает с отправленным';
 
+        $user = Users::where('phone_mobile', $phone)->first();
+
+        if(!empty($user) && $user->stage_registration == 8)
+            return ['status' => 201, 'resp' => 'Код принят'];
+
+        if(!empty($user) && $user->stage_registration != 8)
+            return ['status' => 202, 'resp' => $user->stage_registration];
+
         return ['status' => 200, 'resp' => 'Код принят'];
     }
 
