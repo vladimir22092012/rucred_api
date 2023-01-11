@@ -1,6 +1,10 @@
 <?php
 namespace App\Http\Controllers\StepsControllers;
 
+use App\Models\Loantypes;
+use App\Models\Orders;
+use App\Models\OrganisationSettlement;
+use App\Models\Users;
 use Illuminate\Http\Request;
 
 class MainController extends StepsController
@@ -17,6 +21,66 @@ class MainController extends StepsController
         $lastname = $request['lastname'];          //Фамилия
         $patronymic = $request['patronymic'] ?? '';  //Отчество
         $source = $request['source'] ?? 'site';
-        $orderid = $request['orderId'] ?? '';
+
+
+        $tariff = Loantypes::find($tariff_id);
+        $error = false;
+
+        if ($amount < $tariff->min_amount) {
+            $error = 'Сумма займа не может быть меньше ' . $tariff->min_amount;
+        }
+
+        if ($amount > $tariff->max_amount) {
+            $error = 'Сумма займа не может быть больше ' . $tariff->max_amount;
+        }
+
+        if ($error)
+            return ['status' => 404, 'resp' => $error];
+
+        //Счет для выплаты займа
+        $settlement = OrganisationSettlement::getDefault();
+
+        $number = Users::getLastPersonalNumber();
+        $number++;
+
+        $userData = [
+            'firstname' => $firstname,
+            'lastname' => $lastname,
+            'patronymic' => $patronymic,
+            'birth' => $birth,
+            'birth_place' => $birth_place,
+            'password' => '',
+            'phone_mobile' => $phone,
+            'personal_number' => $number,
+            'canSendOnec' => 1,
+            'canSendYaDisk' => 1
+        ];
+
+        $userId = Users::insertGetId($userData);
+
+        $order_source_id = 1;
+
+        if ($source == 'mobile') {
+            $order_source_id = 2;
+        }
+
+        $orderData = [
+            'amount' => $amount,
+            'date' => date('Y-m-d H:i:s'),
+            'user_id' => $userId,
+            'status' => 12,
+            'offline' => 0,
+            'charge' => 0.00,
+            'insure' => 0.00,
+            'loan_type' => (int)$tariff_id,
+            'probably_start_date' => $start_date,
+            'settlement_id' => $settlement->id,
+            'order_source_id' => $order_source_id
+        ];
+
+        $newOrder = new Orders($orderData);
+        $newOrder->save();
+
+        return ['status' => 200, 'resp' => 'success'];
     }
 }

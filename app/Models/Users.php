@@ -25,4 +25,12 @@ class Users extends Model
 
         return $profile;
     }
+
+    public static function getLastPersonalNumber()
+    {
+
+        $number = self::max('personal_number');
+
+        return $number;
+    }
 }

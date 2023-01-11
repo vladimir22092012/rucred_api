@@ -14,6 +14,7 @@ use App\Http\Middleware\OrderOwner;
 use App\Http\Controllers\AccountControllers\ActiveLoansController;
 use App\Http\Controllers\AccountControllers\RequisitesController;
 use App\Http\Controllers\AccountControllers\DocumentsController;
+use App\Http\Controllers\StepsControllers\MainController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,4 +56,6 @@ Route::middleware([TokenCheck::class])->group(function () {
     Route::post('/lk/requisites/change', [RequisitesController::class, 'changeRequisites']);
 
     Route::post('/lk/documents', [DocumentsController::class, 'get']);
+
+    Route::post('/step/main', [MainController::class, 'action']);
 });
