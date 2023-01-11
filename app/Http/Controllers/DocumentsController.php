@@ -41,7 +41,7 @@ class DocumentsController extends AccountController
                 'date'     => $doc->created,
                 'order_id' => $doc->order_id,
                 'name'     => $doc->name,
-                'link'     => env('URL_CRM') . 'online_docs/' . $doc->hash
+                'link'     => env('URL_CRM') . 'online_docs?id=' . $doc->hash
             ];
         }
 
