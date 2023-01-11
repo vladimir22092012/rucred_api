@@ -90,8 +90,8 @@ class Sms
         if(!empty($user) && $user->stage_registration == 8 && $step == 'reg')
             return ['status' => 201, 'resp' => 'Код принят'];
 
-        if(!empty($user) && $user->stage_registration != 8)
-            return ['status' => 202, 'resp' => $user->stage_registration && $step == 'reg'];
+        if(!empty($user) && $user->stage_registration != 8 && $step == 'reg')
+            return ['status' => 202, 'resp' => $user->stage_registration];
 
         return ['status' => 200, 'resp' => 'Код принят'];
     }
