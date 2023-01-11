@@ -5,6 +5,7 @@ use App\Models\Loantypes;
 use App\Models\Orders;
 use App\Models\OrganisationSettlement;
 use App\Models\Users;
+use App\Models\UsersTokens;
 use Illuminate\Http\Request;
 
 class MainController extends StepsController
@@ -77,6 +78,8 @@ class MainController extends StepsController
         ];
 
         $userId = Users::insertGetId($userData);
+
+        UsersTokens::where('token', $request->header('Authorization'))->update(['user_id' => $userId]);
 
         $order_source_id = 1;
 

@@ -41,7 +41,7 @@ class Cookies
             }
 
         }else
-            $userId = '';
+            $userId = 0;
 
         $rand = rand(1, 999999);
         $newToken = md5((string)$rand);
