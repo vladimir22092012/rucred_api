@@ -33,4 +33,34 @@ class Users extends Model
 
         return $number;
     }
+
+    public static function checkPassport($passport_serial)
+    {
+
+        $user = self::select('id')
+            ->where('passport_serial', $passport_serial)
+            ->first();
+
+        return $user;
+    }
+
+    public static function checkSnils($snils)
+    {
+
+        $user = self::select('id')
+            ->where('snils', $snils)
+            ->first();
+
+        return $user;
+    }
+
+    public static function checkInn($inn)
+    {
+
+        $user = self::select('id')
+            ->where('inn', $inn)
+            ->first();
+
+        return $user;
+    }
 }
