@@ -17,6 +17,4 @@ class StepsController extends Controller
         $usersToken = UsersTokens::where('token', $token)->first();
         self::$userId = $usersToken->user_id;
     }
-
-    abstract function action(Request $request);
 }
