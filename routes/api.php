@@ -51,6 +51,7 @@ Route::middleware([TokenCheck::class])->group(function () {
 
     Route::post('/lk/requisites/get', [RequisitesController::class, 'get']);
     Route::post('/lk/requisites/card/add', [RequisitesController::class, 'addCard']);
+    Route::post('/lk/requisites/account/add', [RequisitesController::class, 'addAccount']);
 
     Route::post('/lk/documents', [DocumentsController::class, 'get']);
 });

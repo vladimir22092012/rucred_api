@@ -48,8 +48,8 @@ class RequisitesController extends AccountController
     {
         //Обязательные поля => текст ошибки
         $requiredParams = [
-            'pan'       => 'Номер карты обязателен к заполнению',
-            'expdate'   => 'Дата окончания карты обязательна к заполнению',
+            'pan' => 'Номер карты обязателен к заполнению',
+            'expdate' => 'Дата окончания карты обязательна к заполнению',
         ];
 
         //Проверка на обязательные поля в запросе
@@ -59,7 +59,7 @@ class RequisitesController extends AccountController
             }
         }
 
-        $pan     = $request['pan'];
+        $pan = $request['pan'];
         $expdate = $request['expdate'];
         $default = $request['default'] ?? 0;
 
@@ -69,14 +69,56 @@ class RequisitesController extends AccountController
         }
 
         $userData = [
-            'user_id'   => self::$userId,
-            'pan'       => $pan,
-            'expdate'   => $expdate,
+            'user_id' => self::$userId,
+            'pan' => $pan,
+            'expdate' => $expdate,
             'base_card' => $default
         ];
 
         Cards::insert($userData);
 
         return ['status' => 200, 'resp' => 'Карта успешно добавлена'];
+    }
+
+    public function addAccount(Request $request)
+    {
+        //Обязательные поля => текст ошибки
+        $requiredParams = [
+            'number'             => 'Номер счета обязателен к заполнению',
+            'name'               => 'Название банка(АКБ) обязателено к заполнению',
+            'bik'                => 'БИК обязателен к заполнению',
+            'holder'             => 'ФИО владельца обязательно к заполнению',
+            'correspondent_acc'  => 'К/С обязателен к заполнению',
+        ];
+
+        //Проверка на обязательные поля в запросе
+        foreach ($requiredParams as $key => $value) {
+            if (!isset($request[$key])) {
+                return ['status' => 500, 'resp' => $value];
+            }
+        }
+
+        $number            = $request['number'];
+        $name              = $request['name'];
+        $bik               = $request['bik'];
+        $holder            = $request['holder'];
+        $correspondent_acc = $request['correspondent_acc'];
+
+        //Cбрасываем предудущий выбор счета по умолчанию
+        BankRequisite::setZeroDefault(self::$userId);
+
+        $userData = [
+            'user_id'           => self::$userId,
+            'number'            => $number,
+            'name'              => $name,
+            'bik'               => $bik,
+            'holder'            => $holder,
+            'correspondent_acc' => $correspondent_acc,
+            'default'           => 1
+        ];
+
+        BankRequisite::insert($userData);
+
+        return ['status' => 200, 'resp' => 'Счет успешно добавлен'];
     }
 }
