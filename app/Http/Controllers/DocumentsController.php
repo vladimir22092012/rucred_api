@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contacts;
+use App\Models\Contracts;
 use App\Models\Documents;
 use App\Models\Orders;
 
@@ -13,9 +14,12 @@ class DocumentsController extends AccountController
         $docs = Documents::getDocuments(self::$userId);
         $res = [];
 
+        if(empty($docs))
+            return ['status' => 404, 'resp' => 'empty'];
+
         foreach ($docs as $key => $doc) {
 
-            $contract = Contacts::where('order_id', $doc->order_id)->first();
+            $contract = Contracts::where('order_id', $doc->order_id)->first();
             $order = Orders::where('id', $doc->order_id)->first();
 
             if(empty($contract)){
