@@ -67,6 +67,6 @@ class Products extends Info
             }
         }
 
-        return response(['resp' => $result], 200);
+        return response($result, 200);
     }
 }
