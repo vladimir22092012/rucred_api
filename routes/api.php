@@ -17,6 +17,7 @@ use App\Http\Controllers\StepsControllers\MainController;
 use App\Http\Controllers\StepsControllers\PassportController;
 use App\Http\Controllers\StepsControllers\ContactController;
 use App\Http\Controllers\StepsControllers\MailController;
+use App\Http\Controllers\StepsControllers\EmployerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,5 +60,6 @@ Route::middleware([TokenCheck::class])->group(function () {
     Route::post('/step/main', [MainController::class, 'action']);
     Route::post('/step/passport', [PassportController::class, 'action']);
     Route::post('/step/contacts', [ContactController::class, 'action']);
+    Route::post('/step/work', [EmployerController::class, 'action']);
 
 });
