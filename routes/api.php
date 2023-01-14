@@ -55,6 +55,7 @@ Route::middleware([TokenCheck::class])->group(function () {
     Route::post('/lk/documents', [DocumentsController::class, 'get']);
 
     Route::post('/mail/send', [MailController::class, 'send']);
+    Route::post('/mail/check', [MailController::class, 'check']);
 
     Route::post('/step/main', [MainController::class, 'action']);
     Route::post('/step/passport', [PassportController::class, 'action']);
