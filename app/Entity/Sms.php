@@ -21,14 +21,14 @@ class Sms
         $step = $request['step'];
 
         if (empty($phone))
-            return response(['status' => 400, 'resp' => 'Не заполнен параметр phone'], 400);
+            return response('Не заполнен параметр phone', 400);
 
         $phone = self::clear_phone($phone);
 
         $userId = Users::where('phone_mobile', $phone)->first();
 
         if (empty($userId) && $step == 'auth')
-            return response(['status' => 404, 'resp' => 'Такого клиента нет'], 404);
+            return response('Такого клиента нет', 404);
 
 
         $code = rand(1000, 9999);
@@ -67,7 +67,7 @@ class Sms
         $msg = 'Код отправлен';
 
 
-        return ['status' => 200, 'resp' => $msg];
+        return response($msg, 200);
     }
 
     public function check(Request $request)
@@ -77,15 +77,15 @@ class Sms
         $step = $request['step'];
 
         if (empty($phone))
-            return 'Не заполнен параметр phone';
+            return response('Не заполнен параметр phone', 400);
 
         if (empty($code))
-            return 'Не заполнен параметр code';
+            return response('Не заполнен параметр code', 400);
 
         $checkCode = SmsDB::getCode($phone);
 
         if ($checkCode != $code)
-            return 'Введеный код не совпадает с отправленным';
+            return response('Введеный код не совпадает с отправленным', 406);
 
         $user = Users::where('phone_mobile', $phone)->first();
 
@@ -109,11 +109,11 @@ class Sms
         UsersTokens::insert($insert);
 
         if (!empty($user) && $user->stage_registration == 8 && $step == 'reg')
-            return ['status' => 201, 'resp' => $newToken];
+            return response($newToken, 301);
         elseif (!empty($user) && $user->stage_registration != 8 && $step == 'reg')
-            return ['status' => 202, 'resp' => ['stage' => $user->stage_registration, 'token' => $newToken]];
+            return response(['stage' => $user->stage_registration, 'token' => $newToken], 302);
         else
-            return ['status' => 200, 'resp' => $newToken];
+            return response($newToken, 200);
     }
 
     public static function clear_phone($phone)
