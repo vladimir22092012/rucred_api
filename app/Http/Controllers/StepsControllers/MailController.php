@@ -33,7 +33,7 @@ class MailController extends StepsController
 
         $isBusy = Contacts::where('value', $email)->first();
 
-        if($isBusy)
+        if($isBusy && $isBusy->user_id != self::$userId)
             return response('Такая почта уже используется', 406);
 
         $code = random_int(1000, 9999);
