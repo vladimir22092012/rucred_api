@@ -34,16 +34,4 @@ class Mail
         return $resp;
 
     }
-
-    public static function clear_phone($phone)
-    {
-        $remove_symbols = [
-            '(',
-            ')',
-            '-',
-            ' ',
-            '+'
-        ];
-        return str_replace($remove_symbols, '', $phone);
-    }
 }

@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Entity\Sms;
 use App\Account\Profile;
 use App\Info\Products;
-use App\Entity\Cookies;
 use App\Http\Middleware\TokenCheck;
 use App\Account\General;
 use App\Account\Photos;
@@ -17,6 +16,7 @@ use App\Http\Controllers\AccountControllers\DocumentsController;
 use App\Http\Controllers\StepsControllers\MainController;
 use App\Http\Controllers\StepsControllers\PassportController;
 use App\Http\Controllers\StepsControllers\ContactController;
+use App\Http\Controllers\StepsControllers\MailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,7 +54,10 @@ Route::middleware([TokenCheck::class])->group(function () {
 
     Route::post('/lk/documents', [DocumentsController::class, 'get']);
 
+    Route::post('/mail/send', [MailController::class, 'send']);
+
     Route::post('/step/main', [MainController::class, 'action']);
     Route::post('/step/passport', [PassportController::class, 'action']);
     Route::post('/step/contacts', [ContactController::class, 'action']);
+
 });

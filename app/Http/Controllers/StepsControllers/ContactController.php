@@ -14,20 +14,20 @@ class ContactController extends StepsController
     {
         $userId = self::$userId;
 
-        $email    = $params['email'] ?? null;
-        $viber    = $params['viber'] ?? null;
-        $telegram = $params['telegram'] ?? null;
-        $facebook = $params['facebook'] ?? null;
-        $ok       = $params['ok'] ?? null;
-        $vk       = $params['vk'] ?? null;
+        $email    = $request['email'] ?? null;
+        $viber    = $request['viber'] ?? null;
+        $telegram = $request['telegram'] ?? null;
+        $facebook = $request['facebook'] ?? null;
+        $ok       = $request['ok'] ?? null;
+        $vk       = $request['vk'] ?? null;
 
-        $foreign_flag      = $params['fio_foreign_flagrelative'] ?? 0; //иностранное публичное должностное лицо
-        $foreign_husb_wife = $params['foreign_husb_wife'] ?? 0;        //иностранный муж\жена да\нет
-        $fio_public_spouse = $params['fio_public_spouse'] ?? '';       //ФИО Супруги(-а)
-        $foreign_relative  = $params['foreign_relative'] ?? 0;         //Родственник иностранного публичного должностного лица
-        $fio_relative      = $params['fio_relative'] ?? '';            //ФИО родственника ИПДЛ
+        $foreign_flag      = $request['fio_foreign_flagrelative'] ?? 0; //иностранное публичное должностное лицо
+        $foreign_husb_wife = $request['foreign_husb_wife'] ?? 0;        //иностранный муж\жена да\нет
+        $fio_public_spouse = $request['fio_public_spouse'] ?? '';       //ФИО Супруги(-а)
+        $foreign_relative  = $request['foreign_relative'] ?? 0;         //Родственник иностранного публичного должностного лица
+        $fio_relative      = $request['fio_relative'] ?? '';            //ФИО родственника ИПДЛ
 
-        $contact_preferred = $params['contact_preferred_id'];          //Предпочтительные способы связи
+        $contact_preferred = $request['contact_preferred_id'];          //Предпочтительные способы связи
         $contact_preferred = str_replace(['[', ']', ' '], '', $contact_preferred);
         $contact_preferred = explode(',', $contact_preferred);
 
