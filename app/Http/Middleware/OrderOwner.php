@@ -28,6 +28,6 @@ class OrderOwner
         if($order->user_id == $userToken->user_id)
             return $next($request);
         else
-            return response()->json(['status' => 404, 'resp' => 'it is not your order']);
+            return response('Заявка не пренадлежит вам', 403);
     }
 }

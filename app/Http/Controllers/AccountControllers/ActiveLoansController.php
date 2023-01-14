@@ -15,7 +15,7 @@ class ActiveLoansController extends AccountController
         $orders = Orders::getActiveOrders(self::$userId);
 
         if(empty($orders))
-            return ['status' => 404, 'resp' => 'Нет активных займов'];
+            return response('Нет активных займов', 404);
 
         $res = [];
 
@@ -164,6 +164,6 @@ class ActiveLoansController extends AccountController
             ];
         }
 
-        return ['status' => 200, 'resp' => $res];
+        return response($res, 200);
     }
 }

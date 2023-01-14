@@ -22,6 +22,6 @@ class Photos extends Account
             ];
         }
 
-        return ['status' => 200, 'resp' => $res];
+        return response($res, 200);
     }
 }

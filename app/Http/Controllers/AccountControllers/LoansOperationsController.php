@@ -13,10 +13,10 @@ class LoansOperationsController extends AccountController
         $orderId = $request['orderId'];
 
         if(!intval($orderId))
-            return ['status' => 500, 'resp' => 'is not int'];
+            return response('Не число', 400);
 
         $operations = LoansOperations::get($orderId);
 
-        return ['status' => 200, 'resp' => $operations];
+        return response($operations, 200);
     }
 }

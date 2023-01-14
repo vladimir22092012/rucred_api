@@ -28,7 +28,7 @@ class MainController extends StepsController
         //Проверка на обязательные поля в запросе
         foreach ($requiredParams as $key => $value) {
             if (!isset($request[$key])) {
-                return ['status' => 500, 'resp' => $value];
+                return response($value, 400);
             }
         }
 
@@ -56,7 +56,7 @@ class MainController extends StepsController
         }
 
         if ($error)
-            return ['status' => 404, 'resp' => $error];
+            return response($error, 400);
 
         //Счет для выплаты займа
         $settlement = OrganisationSettlement::getDefault();
@@ -105,6 +105,6 @@ class MainController extends StepsController
         $newOrder = new Orders($orderData);
         $newOrder->save();
 
-        return ['status' => 200, 'resp' => 'success'];
+        return response('success', 200);
     }
 }

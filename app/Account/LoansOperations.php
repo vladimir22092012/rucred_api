@@ -9,6 +9,6 @@ class LoansOperations extends Account
     public static function get($orderId)
     {
         $operations = Operations::where('order_id', $orderId)->get();
-        return $operations;
+        return response($operations, 200);
     }
 }

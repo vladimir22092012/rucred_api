@@ -41,7 +41,7 @@ class RequisitesController extends AccountController
             $res['accounts'][$key] = $arr;
         }
 
-        return ['status' => 200, 'resp' => $res];
+        return response($res, 200);
     }
 
     public function addCard(Request $request)
@@ -55,7 +55,7 @@ class RequisitesController extends AccountController
         //Проверка на обязательные поля в запросе
         foreach ($requiredParams as $key => $value) {
             if (!isset($request[$key])) {
-                return ['status' => 500, 'resp' => $value];
+                return response($value, 400);
             }
         }
 
@@ -77,7 +77,7 @@ class RequisitesController extends AccountController
 
         Cards::insert($userData);
 
-        return ['status' => 200, 'resp' => 'Карта успешно добавлена'];
+        return response('Карта успешно добавлена', 200);
     }
 
     public function addAccount(Request $request)
@@ -94,14 +94,14 @@ class RequisitesController extends AccountController
         //Проверка на обязательные поля в запросе
         foreach ($requiredParams as $key => $value) {
             if (!isset($request[$key])) {
-                return ['status' => 500, 'resp' => $value];
+                return response($value, 400);
             }
         }
 
         $alreadyExist = BankRequisite::where('number', $request['number'])->first();
 
         if(!empty($alreadyExist))
-            return ['status' => 500, 'resp' => 'Такой счет уже существует'];
+            return response('Такой счет уже существует', 406);
 
         $number            = $request['number'];
         $name              = $request['name'];
@@ -124,7 +124,7 @@ class RequisitesController extends AccountController
 
         BankRequisite::insert($userData);
 
-        return ['status' => 200, 'resp' => 'Счет успешно добавлен'];
+        return response('Счет успешно добавлен', 200);
     }
 
     public function changeRequisites(Request $request)

@@ -16,12 +16,15 @@ class General extends Account
         $userId = self::$userId;
         $user = Users::find($userId);
 
-        if (!empty($user))
+        if (!empty($user)) {
+            $status = 200;
             $hasStage = $user->stage_registration;
-        else
+        } else {
+            $status = 404;
             $hasStage = 'Такого пользователя нет';
+        }
 
-        return ['status' => 200, 'resp' => $hasStage];
+        return response($hasStage, $status);
     }
 
     public function getUser()
@@ -34,17 +37,18 @@ class General extends Account
             $user->faktAddress = Addresses::find($user->faktaddress_id);
             $user->requisites = BankRequisite::where('user_id', $user->id)->get();
             $user->order = Orders::where('user_id', $user->id)->orderBy('id', 'desc')->first();
-
-        } else
+            $status = 200;
+        } else {
+            $status = 404;
             $user = 'Такого пользователя нет';
+        }
 
-        return ['status' => 200, 'resp' => $user];
+        return response($user, $status);
     }
 
     public function getDefaultSettlement()
     {
         $settlement = OrganisationSettlement::getDefault();
-
-        return ['status' => 200, 'resp' => $settlement->id];
+        return response($settlement->id, 200);
     }
 }

@@ -51,7 +51,7 @@ class ContactController extends StepsController
 
         if ($checkEmail && ($checkEmail->user_id != $userId)) {
             $msg = 'Данный email уже использовался при регистрации';
-            return ['status' => 404, 'resp' => $msg];
+            return response($msg, 406);
         }
 
         if ($viber) {
@@ -59,7 +59,7 @@ class ContactController extends StepsController
 
             if ($checkViber && ($checkViber->user_id != $userId)) {
                 $msg = 'Данный viber уже использовался при регистрации';
-                return ['status' => 404, 'resp' => $msg];
+                return response($msg, 406);
             }
         }
 
@@ -68,7 +68,7 @@ class ContactController extends StepsController
 
             if ($checkTelegram && ($checkTelegram->user_id != $userId)) {
                 $msg = 'Данный telegram уже использовался при регистрации';
-                return ['status' => 404, 'resp' => $msg];
+                return response($msg, 406);
             }
         }
 
@@ -102,6 +102,6 @@ class ContactController extends StepsController
         //Создаем документы для следующих шагов регистрации
         Documents::createDocsForRegistration($userId);
 
-        return ['status' => 200, 'resp' => 'success'];
+        return response('success', 200);
     }
 }

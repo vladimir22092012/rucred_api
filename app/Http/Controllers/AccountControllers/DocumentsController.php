@@ -15,7 +15,7 @@ class DocumentsController extends AccountController
         $res = [];
 
         if(empty($docs))
-            return ['status' => 404, 'resp' => 'empty'];
+            return response('Документы отсутствуют', 404);
 
         foreach ($docs as $key => $doc) {
 
@@ -45,6 +45,6 @@ class DocumentsController extends AccountController
             ];
         }
 
-        return ['status' => 200, 'resp' => $res];
+        return response($res, 200);
     }
 }

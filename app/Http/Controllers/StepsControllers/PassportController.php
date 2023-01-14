@@ -25,7 +25,7 @@ class PassportController extends StepsController
         //Проверка на обязательные поля в запросе
         foreach ($requiredParams as $key => $value) {
             if (!isset($request[$key])) {
-                return ['status' => 500, 'resp' => $value];
+                return response($value, 400);
             }
         }
 
@@ -58,17 +58,17 @@ class PassportController extends StepsController
 
         if ($checkPassport && ($checkPassport->id != self::$userId)) {
             $msg = 'Данный паспорт уже использовался при регистрации';
-            return ['status' => 404, 'resp' => $msg];
+            return response($msg, 406);
         }
 
         if ($checkSnils && ($checkSnils->id != self::$userId)) {
             $msg = 'Данный номер снилс уже использовался при регистрации';
-            return ['status' => 404, 'resp' => $msg];
+            return response($msg, 406);
         }
 
         if ($checkInn && ($checkInn->id != self::$userId)) {
             $msg = 'Данный номер инн уже использовался при регистрации';
-            return ['status' => 404, 'resp' => $msg];
+            return response($msg, 406);
         }
 
 
@@ -94,6 +94,6 @@ class PassportController extends StepsController
 
         Users::where('id', self::$userId)->update($userData);
 
-        return ['status' => 200, 'resp' => 'success'];
+        return response('success', 200);
     }
 }
