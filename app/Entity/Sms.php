@@ -21,14 +21,14 @@ class Sms
         $step = $request['step'];
 
         if (empty($phone))
-            return ['status' => 400, 'resp' => 'Не заполнен параметр phone'];
+            return response(['status' => 400, 'resp' => 'Не заполнен параметр phone'], 400);
 
         $phone = self::clear_phone($phone);
 
         $userId = Users::where('phone_mobile', $phone)->first();
 
         if (empty($userId) && $step == 'auth')
-            return ['status' => 404, 'resp' => 'Такого клиента нет'];
+            return response(['status' => 404, 'resp' => 'Такого клиента нет'], 404);
 
 
         $code = rand(1000, 9999);
