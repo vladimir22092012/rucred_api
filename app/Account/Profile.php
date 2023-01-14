@@ -13,40 +13,47 @@ class Profile extends Account
     public static function get()
     {
         $userId = self::$userId;
-        $profile = Users::getProfile($userId);
-        $contacts = Contacts::getContacts($userId);
-        $company = Companies::find($profile->company_id);
-        $regaddress = Addresses::where('id', $profile->regaddress_id)->first();
-        $faktaddress = Addresses::where('id', $profile->faktaddress_id)->first();
+        $user = Users::find($userId);
 
         $res = [
             'personal' => [
-                'lastname'    => $profile->lastname,
-                'firstname'   => $profile->firstname,
-                'patronymic'  => $profile->patronymic,
-                'inn'         => $profile->inn,
-                'snils'       => $profile->snils,
-                'regaddress'  => $regaddress,
-                'faktaddress' => $faktaddress,
-                'birth'       => $profile->birth,
-                'birth_place' => $profile->birth_place
+                'lastname' => $user->lastname,
+                'firstname' => $user->firstname,
+                'patronymic' => $user->patronymic,
+                'birth' => $user->birth,
+                'birth_place' => $user->birth_place
             ],
             'contact' => [
-                "phone"       => $profile->phone_mobile,
-            ],
-            'work' => [
-                'workplace'    => $company->name,
-                'jur_address'  => $company->jur_address,
-                'phys_address' => $company->phys_address,
-                'inn'          => $company->inn,
-                'ogrn'         => $company->ogrn,
-                'kpp'          => $company->kpp,
-                'eio_fio'      => $company->eio_fio
+                "phone" => $user->phone_mobile,
             ],
         ];
 
-        foreach ($contacts as $key => $contact) {
-            $res['contact'][$contact->type] = $contact->value;
+        if (!empty($user->company_id)) {
+            $company = Companies::find($user->company_id);
+
+            $res['work'] =
+                [
+                    'workplace' => $company->name,
+                    'jur_address' => $company->jur_address,
+                    'phys_address' => $company->phys_address,
+                    'inn' => $company->inn,
+                    'ogrn' => $company->ogrn,
+                    'kpp' => $company->kpp,
+                    'eio_fio' => $company->eio_fio
+                ];
+        }
+
+        if (!empty($user->inn))
+            $res['personal']['inn'] = $user->inn;
+        if (!empty($user->snils))
+            $res['personal']['snils'] = $user->snils;
+        if (!empty($user->regaddress_id)) {
+            $regaddress = Addresses::where('id', $user->regaddress_id)->first();
+            $res['personal']['regaddress'] = $regaddress;
+        }
+        if (!empty($user->faktaddress_id)) {
+            $faktaddress = Addresses::where('id', $user->faktaddress_id)->first();
+            $res['personal']['regaddress'] = $faktaddress;
         }
 
         return response($res, 200);
