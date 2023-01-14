@@ -3,8 +3,10 @@
 namespace App\Entity;
 
 use App\Models\Users;
+use App\Models\UsersTokens;
 use Illuminate\Http\Request;
 use App\Models\SmsMessages as SmsDB;
+use Illuminate\Support\Facades\Cookie;
 
 class Sms
 {
@@ -16,7 +18,7 @@ class Sms
     public function send(Request $request)
     {
         $phone = $request['phone'];
-        $step  = $request['step'];
+        $step = $request['step'];
 
         if (empty($phone))
             return ['status' => 400, 'resp' => 'Не заполнен параметр phone'];
@@ -87,13 +89,31 @@ class Sms
 
         $user = Users::where('phone_mobile', $phone)->first();
 
-        if(!empty($user) && $user->stage_registration == 8 && $step == 'reg')
-            return ['status' => 201, 'resp' => 'Код принят'];
 
-        if(!empty($user) && $user->stage_registration != 8 && $step == 'reg')
-            return ['status' => 202, 'resp' => $user->stage_registration];
+        if (!empty($user) && $step == 'auth') {
+            Cookies::doExpireTokens($user->id);
+            $userId = $user->id;
+        } else {
+            $userId = 0;
+        }
 
-        return ['status' => 200, 'resp' => 'Код принят'];
+        $rand = rand(1, 999999);
+        $newToken = md5((string)$rand);
+
+        $insert =
+            [
+                'token' => $newToken,
+                'user_id' => $userId
+            ];
+
+        UsersTokens::insert($insert);
+
+        if (!empty($user) && $user->stage_registration == 8 && $step == 'reg')
+            return ['status' => 201, 'resp' => $newToken];
+        elseif (!empty($user) && $user->stage_registration != 8 && $step == 'reg')
+            return ['status' => 202, 'resp' => ['stage' => $user->stage_registration, 'token' => $newToken]];
+        else
+            return ['status' => 200, 'resp' => $newToken];
     }
 
     public static function clear_phone($phone)
