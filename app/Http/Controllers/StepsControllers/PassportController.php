@@ -29,23 +29,23 @@ class PassportController extends StepsController
             }
         }
 
-        $change_fio = $params['change_fio'] ?? false;      //Менялась ли ФИО
-        $prev_fio = $params['prev_fio'] ?? '';           //Измененное имя
-        $fio_change_date = $params['fio_change_date'] ?? '';    //Дата смены ФИО
+        $change_fio = $request['change_fio'] ?? false;      //Менялась ли ФИО
+        $prev_fio = $request['prev_fio'] ?? '';           //Измененное имя
+        $fio_change_date = $request['fio_change_date'] ?? '';    //Дата смены ФИО
 
-        $passport_serial = $params['passport_serial'];
-        $passport_number = $params['passport_number'];
+        $passport_serial = $request['passport_serial'];
+        $passport_number = $request['passport_number'];
         $passport_serial = "$passport_serial $passport_number";
-        $passport_date = $params['passport_date'];
-        $passport_issued = $params['passport_issued'];
-        $subdivision_code = $params['subdivision_code'];
+        $passport_date = $request['passport_date'];
+        $passport_issued = $request['passport_issued'];
+        $subdivision_code = $request['subdivision_code'];
 
-        $snils = $params['snils'];
-        $inn = $params['inn'];
+        $snils = $request['snils'];
+        $inn = $request['inn'];
 
-        $faktadressfull = $params['faktadressfull'] ?? '';      //Ажрес проживания
-        $regadressfull = $params['regadressfull'];             //Адрес регистрации
-        $actual_address = $params['actual_address'] ?? false;   //Совпадают ли адреса
+        $faktadressfull = $request['faktadressfull'] ?? '';      //Ажрес проживания
+        $regadressfull = $request['regadressfull'];             //Адрес регистрации
+        $actual_address = $request['actual_address'] ?? false;   //Совпадают ли адреса
 
         if ($actual_address) {
             $faktadressfull = $regadressfull;
