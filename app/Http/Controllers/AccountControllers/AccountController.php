@@ -15,6 +15,11 @@ class AccountController extends Controller
         $token = $request->header('Authorization');
 
         $usersToken = UsersTokens::where('token', $token)->first();
-        self::$userId = $usersToken->user_id;
+
+        if(!empty($usersToken))
+            self::$userId = $usersToken->user_id;
+        else
+            return response('Не прошел проверку подлинности', 401);
+
     }
 }
