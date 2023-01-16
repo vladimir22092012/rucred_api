@@ -58,6 +58,13 @@ class Orders extends Model
         return $orders;
     }
 
+    public static function getUnfinished($userId)
+    {
+        $order = self::where('user_id', $userId)->where('status', 12)->last('id')->first();
+
+        return $order;
+    }
+
     public function user()
     {
         return $this->hasOne(Users::class, 'id','user_id');

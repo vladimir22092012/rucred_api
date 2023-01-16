@@ -32,7 +32,6 @@ class EmployerController extends StepsController
         $expenses         = $request['expenses'];                //Расход
         $dependents       = $request['dependents'] ?? 0;         //Количество иждивенцев
         $attestation_otb  = $request['attestation_otb'] ?? null; //Номер аттестаии ОТБ
-        $orderId          = $request['orderId'] ?? '';
 
         //Удаление лишних символов
         $income   = preg_replace("/[^,.0-9]/", '', $income);
@@ -43,6 +42,7 @@ class EmployerController extends StepsController
         $group_id   = $group->id;
         $branch     = Branch::getDefault($company_id, $group_id);
         $branch_id  = $branch->id;
+        $order      = Orders::getUnfinished(self::$userId);
 
         $user = Users::find(self::$userId);
 
@@ -55,7 +55,7 @@ class EmployerController extends StepsController
             'uid'        => $order_uid,
         ];
 
-        Orders::where('id', $orderId)->update($orderData);
+        Orders::where('id', $order->id)->update($orderData);
 
         $userData = [
             'group_id'           => $group_id,
