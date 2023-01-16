@@ -53,6 +53,9 @@ class Employers extends Info
 
         $company = Companies::where('id', $company_id)->first();
 
+        if(empty($company))
+            return response('Отсутствуют компания', 404);
+
         $group_loantypes = GroupsLoantypes::where(['group_id' => $company->group_id, 'on_off_flag' => 1])->get();
 
         if (!empty($group_loantypes)) {
