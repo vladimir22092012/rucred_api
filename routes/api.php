@@ -24,6 +24,7 @@ use App\Info\StandDocs;
 use App\Info\Calculator;
 use App\Http\Controllers\StepsControllers\ProfunionController;
 use App\Http\Controllers\StepsControllers\PhotosController;
+use App\Http\Controllers\StepsControllers\LastStepController;
 
 /*
 |--------------------------------------------------------------------------
@@ -76,4 +77,5 @@ Route::middleware([TokenCheck::class])->group(function () {
     Route::post('/step/requisites/card/add', [RegReq::class, 'addCard']);
     Route::post('/step/profunion', [ProfunionController::class, 'action']);
     Route::post('/step/photos', [PhotosController::class, 'action']);
+    Route::post('/step/end', [LastStepController::class, 'action']);
 });
