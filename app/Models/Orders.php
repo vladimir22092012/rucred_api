@@ -60,7 +60,7 @@ class Orders extends Model
 
     public static function getUnfinished($userId)
     {
-        $order = self::where('user_id', $userId)->where('status', 12)->last('id')->first();
+        $order = self::where('user_id', $userId)->where('status', 12)->orderBy('id', 'desc')->first();
 
         return $order;
     }
