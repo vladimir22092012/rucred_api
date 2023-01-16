@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Faker\Provider\Payment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -173,6 +174,157 @@ class Documents extends Model
         foreach ($types as $key => $type) {
             self::createReg($user, $order, $type);
         }
+    }
+
+    public static function createDocsEndRegistrarion($userId, $orderId)
+    {
+        $user = Users::find($userId);
+        $order = Orders::find($orderId);
+        $contacts = Contacts::getContacts($userId);
+
+        $payment_schedule = PaymentsSchedules::getSchedule($order->id);
+        $order->payment_schedule = $payment_schedule->toArray();
+        $order->order_id = $order->id;
+
+        //ООО МКК "РУССКОЕ КРЕДИТНОЕ ОБЩЕСТВО"
+        $company = Companies::find(2);
+        $order->phys_address = $company->phys_address;
+
+        foreach ($contacts as $key => $value) {
+            if ($value->type == 'email') {
+                $order->email = $value->value;
+            }
+        }
+
+        $faktaddress = Addresses::find($user->faktaddress_id);
+        $regaddress = Addresses::find($user->regaddress_id);
+
+        $order->regaddress  = $regaddress->adressfull;
+        $order->faktaddress = $faktaddress->adressfull;
+
+        $order->passport_serial = $user->passport_serial;
+
+        //todo: подписание отдельно
+        $code_asp = AspCode::getAspEndReg($userId, $orderId);
+        $order->code_asp = $code_asp;
+
+        $types = [
+            'INDIVIDUALNIE_USLOVIA_ONL',
+            'GRAFIK_OBSL_MKR',
+            'PERECHISLENIE_ZAEMN_SREDSTV',
+            'ZAYAVLENIE_ZP_V_SCHET_POGASHENIYA_MKR',
+            'OBSHIE_USLOVIYA'
+        ];
+
+        //Счет для выплаты займа
+        //$settlement = OrganisationSettlement::getDefault();
+
+        foreach ($types as $key => $type) {
+            self::createDefault($user, $order, $type);
+        }
+
+    }
+
+    public static function createDocsAfterRegistrarion($userId, $orderId)
+    {
+        $user = Users::find($userId);
+        $order = Orders::find($orderId);
+        $contacts = Contacts::getContacts($userId);
+
+        $payment_schedule = PaymentsSchedules::getSchedule($order->id);
+        $order->payment_schedule = $payment_schedule->toArray();
+        $order->order_id = $order->id;
+
+        //ООО МКК "РУССКОЕ КРЕДИТНОЕ ОБЩЕСТВО"
+        $company = Companies::find(2);
+        $order->phys_address = $company->phys_address;
+
+        foreach ($contacts as $key => $value) {
+            if ($value->type == 'email') {
+                $order->email = $value->value;
+            }
+        }
+
+        $faktaddress = Addresses::find($user->faktaddress_id);
+        $regaddress = Addresses::find($user->regaddress_id);
+
+        $order->regaddress  = $regaddress->adressfull;
+        $order->faktaddress = $faktaddress->adressfull;
+
+        $order->passport_serial = $user->passport_serial;
+
+        $code_asp = AspCode::getAsp($userId, $orderId);
+        $order->code_asp = $code_asp;
+
+        $types = [
+            'SOGLASIE_NA_OBR_PERS_DANNIH',
+            'SOGLASIE_RUKRED_RABOTODATEL',
+            'SOGLASIE_RABOTODATEL',
+            'SOGLASIE_NA_KRED_OTCHET',
+        ];
+
+        //документы, которые не подписываются
+        $skipDoc = [
+            'INDIVIDUALNIE_USLOVIA_ONL',
+            'GRAFIK_OBSL_MKR'
+        ];
+
+        foreach ($types as $key => $type) {
+            $orderData = $order;
+            if (in_array($type, $skipDoc)) {
+                $orderData->code_asp = false;
+            }
+            self::createDefault($user, $orderData, $type);
+        }
+
+    }
+
+    public static function createDefault($user, $order, $type)
+    {
+        $params = $order->toArray();
+        $arrUser = $user->toArray();
+
+        foreach ($arrUser as $key => $value) {
+            if ($key == 'email') {
+                continue;
+            }
+            $params[$key] = $value;
+        }
+
+        $data = [
+            'contract_id'    => $order->contract_id,
+            'name'           => self::$names[$type],
+            'template'       => self::$templates[$type],
+            'client_visible' => self::$client_visible[$type],
+            'params'         => serialize((object)$params),
+            'created'        => date('Y-m-d H:i:s'),
+            'numeration'     => self::$numeration[$type],
+            'hash'           => sha1(rand(11111, 99999))
+        ];
+
+        $needAsp = false;
+        if ($order->code_asp) {
+            $needAsp = true;
+        }
+
+        //документы, которые не подписываются
+        $skipDoc = [
+            'INDIVIDUALNIE_USLOVIA_ONL',
+            'GRAFIK_OBSL_MKR'
+        ];
+
+        if (in_array($type, $skipDoc)) {
+            $needAsp = false;
+        }
+
+        if ($needAsp) {
+            $data['asp_id'] = $order->code_asp->id;
+        }
+
+        self::updateOrCreate(
+            ['user_id' => $user->id, 'order_id' => $order->id, 'type' => $type],
+            $data
+        );
     }
 
     public static function createReg($user, $order, $type)

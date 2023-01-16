@@ -22,6 +22,7 @@ use App\Info\Employers;
 use App\Http\Controllers\StepsControllers\RequisitesController as RegReq;
 use App\Info\StandDocs;
 use App\Info\Calculator;
+use App\Http\Controllers\StepsControllers\ProfunionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -72,5 +73,6 @@ Route::middleware([TokenCheck::class])->group(function () {
     Route::post('/step/work', [EmployerController::class, 'action']);
     Route::post('/step/requisites/bank/add', [RegReq::class, 'addAccount']);
     Route::post('/step/requisites/card/add', [RegReq::class, 'addCard']);
+    Route::post('/step/profunion', [ProfunionController::class, 'action']);
 
 });
