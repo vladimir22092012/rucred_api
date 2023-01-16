@@ -2,7 +2,10 @@
 
 namespace App\Info;
 
+use App\Models\Companies;
 use App\Models\Group;
+use App\Models\GroupsLoantypes;
+use App\Models\Loantypes;
 use Illuminate\Http\Request;
 
 class Employers extends Info
@@ -39,5 +42,34 @@ class Employers extends Info
         }
 
         return response($result, 200);
+    }
+
+    static function change(Request $request)
+    {
+        $company_id = $request['group_id'];
+
+        if(empty($company_id))
+            return response('Отсутствует параметр group_id', 400);
+
+        $company = Companies::where('id', $company_id)->first();
+
+        $group_loantypes = GroupsLoantypes::where(['group_id' => $company->group_id, 'on_off_flag' => 1])->get();
+
+        if (!empty($group_loantypes)) {
+            foreach ($group_loantypes as $group_loantype) {
+                $loantype = Loantypes::where('id', $group_loantype->loantype_id)->first();
+
+                $actual_percents = GroupsLoantypes::getPercents($group_loantype->group_id, $group_loantype->loantype_id);
+                $loantype->percent = $actual_percents->standart_percents;
+                $loantype->profunion = $actual_percents->preferential_percents;
+
+                $loantypes[] = $loantype;
+            }
+        }
+
+        if (!isset($loantypes))
+            $loantypes = 'Нет подходящих тарифов';
+
+        return response($loantypes, 200);
     }
 }

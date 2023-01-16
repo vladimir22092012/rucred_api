@@ -35,7 +35,8 @@ Route::post('/sms/send', [Sms::class, 'send']);
 Route::post('/sms/check', [Sms::class, 'check']);
 
 Route::get('/info/products', [Products::class, 'get']);
-Route::get('/info/employers', [Employers::class, 'get']);
+Route::get('/info/employers/get', [Employers::class, 'get']);
+Route::get('/info/employers/change', [Employers::class, 'change']);
 
 Route::middleware([TokenCheck::class])->group(function () {
     Route::post('/lk/profile', [Profile::class, 'get']);
