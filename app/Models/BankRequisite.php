@@ -12,18 +12,18 @@ class BankRequisite extends Model
     public $timestamps = false;
 
     public static function getAccounts($userId) {
-        $accounts = BankRequisite::where('user_id', $userId)
+        $accounts = self::where('user_id', $userId)
             ->get();
 
         return $accounts;
     }
 
     public static function getDefault($userId) {
-        $account = BankRequisite::where('user_id', $userId)
+        $account = self::where('user_id', $userId)
             ->where('default', 1)
             ->first();
         if (is_null($account)) {
-            $account = BankRequisite::where('user_id', $userId)
+            $account = self::where('user_id', $userId)
                 ->first();
         }
 
@@ -32,13 +32,13 @@ class BankRequisite extends Model
 
     //"обнуление" всех счетов по умолчанию
     public static function setZeroDefault($userId) {
-        BankRequisite::where('user_id', $userId)
+        self::where('user_id', $userId)
             ->update(['default' => 0]);
     }
 
     public static function checkNumber($number)
     {
-        $account = BankRequisite::select('user_id')
+        $account = self::select('user_id')
             ->where('number', $number)
             ->first();
 

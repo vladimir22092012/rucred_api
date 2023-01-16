@@ -19,6 +19,7 @@ use App\Http\Controllers\StepsControllers\ContactController;
 use App\Http\Controllers\StepsControllers\MailController;
 use App\Http\Controllers\StepsControllers\EmployerController;
 use App\Info\Employers;
+use App\Http\Controllers\StepsControllers\RequisitesController as RegReq;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,5 +66,7 @@ Route::middleware([TokenCheck::class])->group(function () {
     Route::post('/step/passport', [PassportController::class, 'action']);
     Route::post('/step/contacts', [ContactController::class, 'action']);
     Route::post('/step/work', [EmployerController::class, 'action']);
+    Route::post('/step/requisites/bank/add', [RegReq::class, 'addAccount']);
+    Route::post('/step/requisites/card/add', [RegReq::class, 'addCard']);
 
 });
