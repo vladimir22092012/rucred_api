@@ -18,6 +18,7 @@ use App\Http\Controllers\StepsControllers\PassportController;
 use App\Http\Controllers\StepsControllers\ContactController;
 use App\Http\Controllers\StepsControllers\MailController;
 use App\Http\Controllers\StepsControllers\EmployerController;
+use App\Info\Employers;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,7 @@ Route::post('/sms/send', [Sms::class, 'send']);
 Route::post('/sms/check', [Sms::class, 'check']);
 
 Route::get('/info/products', [Products::class, 'get']);
+Route::get('/info/employers', [Employers::class, 'get']);
 
 Route::middleware([TokenCheck::class])->group(function () {
     Route::post('/lk/profile', [Profile::class, 'get']);
