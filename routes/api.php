@@ -20,6 +20,7 @@ use App\Http\Controllers\StepsControllers\MailController;
 use App\Http\Controllers\StepsControllers\EmployerController;
 use App\Info\Employers;
 use App\Http\Controllers\StepsControllers\RequisitesController as RegReq;
+use App\Info\StandDocs;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +39,7 @@ Route::post('/sms/check', [Sms::class, 'check']);
 Route::get('/info/products', [Products::class, 'get']);
 Route::get('/info/employers/get', [Employers::class, 'get']);
 Route::get('/info/employers/change', [Employers::class, 'change']);
+Route::get('/info/stand/docs', [StandDocs::class, 'get']);
 
 Route::middleware([TokenCheck::class])->group(function () {
     Route::post('/lk/profile', [Profile::class, 'get']);
