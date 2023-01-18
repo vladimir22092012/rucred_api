@@ -149,7 +149,7 @@ class Documents extends Model
         $user->regaddress  = $regaddress->adressfull;
         $user->faktaddress = $faktaddress->adressfull;
 
-        $order = Orders ::getOrder($userId);
+        $order = Orders::getUnfinished($userId);
         $order->order_id = $order->id;
         $code_asp = AspCode::getAsp($userId, $order->id);
         $user->code_asp = $code_asp;

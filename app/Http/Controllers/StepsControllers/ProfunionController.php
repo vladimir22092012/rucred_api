@@ -97,7 +97,7 @@ class ProfunionController extends StepsController
         if ($tariff->type == 'pdl') {
             $payment_schedule = PaymentSchedule::processing('pdl', $data);
         } else {
-            $payment_schedule = PaymentSchedule::processing('pdl', $data);
+            $payment_schedule = PaymentSchedule::processing('annouitet', $data);
         }
 
         $percent_per_month = (($percents / 100) * 365) / 12;
