@@ -11,29 +11,32 @@ class PhotosController extends StepsController
     public function action(Request $request)
     {
         $userId = self::$userId;
-        $type = $request['type'];
+        $types = $request['type'];
 
-        $file = $request->file('file');
+        $files = $request->file('file');
 
-        $ext = pathinfo($file->getFilename(), PATHINFO_EXTENSION);
-        $new_filename = md5(microtime() . rand()) . '.' . $ext;
+        for ($i = 0; $i <= 2; $i++) {
 
-        if (!file_exists($_SERVER['DOCUMENT_ROOT'] . "/../files/users/" . $userId)) {
-            mkdir($_SERVER['DOCUMENT_ROOT'] . "/../files/users/" . $userId, 0777, true);
+            $ext = pathinfo($files[$i]->getFilename(), PATHINFO_EXTENSION);
+            $new_filename = md5(microtime() . rand()) . '.' . $ext;
+
+            if (!file_exists($_SERVER['DOCUMENT_ROOT'] . "/../files/users/" . $userId)) {
+                mkdir($_SERVER['DOCUMENT_ROOT'] . "/../files/users/" . $userId, 0777, true);
+            }
+
+            $files[$i]->move($_SERVER['DOCUMENT_ROOT'] . "/../files/users/" . $userId . '/' . $new_filename);
+
+            Files::updateOrCreate(
+                ['user_id' => $userId, 'type' => $types[$i]],
+                ['name' => $new_filename, 'status' => 0]
+            );
+
+            //Удаление старых фото со статусом отклонено (3)
+            Files::delOldPhotos($userId, $types[$i]);
         }
 
-        $file->move($_SERVER['DOCUMENT_ROOT'] . "/../files/users/" . $userId . '/' . $new_filename);
+        Users::where('id', $userId)->update(['stage_registration' => 7]);
 
-        Files::updateOrCreate(
-            ['user_id' => $userId, 'type' => $type],
-            ['name' => $new_filename, 'status' => 0]
-        );
-
-        //Удаление старых фото со статусом отклонено (3)
-        Files::delOldPhotos($userId, $type);
-
-        Users::where('id' , $userId)->update(['stage_registration' => 7]);
-
-        return response(env('URL_CRM').'files/users/' . $userId.'/'.$new_filename, 200);
+        return response('success', 200);
     }
 }

@@ -28,8 +28,6 @@ class ContactController extends StepsController
         $fio_relative      = $request['fio_relative'] ?? '';            //ФИО родственника ИПДЛ
 
         $contact_preferred = $request['contact_preferred_id'];          //Предпочтительные способы связи
-        $contact_preferred = str_replace(['[', ']', ' '], '', $contact_preferred);
-        $contact_preferred = explode(',', $contact_preferred);
 
         //В бд сохраняется как 1 - нет, 2 - да (из-за js в црм). В апи приходит 0 - нет, 1 - да
         $foreign_flag++;

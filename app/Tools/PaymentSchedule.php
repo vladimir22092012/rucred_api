@@ -42,7 +42,7 @@ class PaymentSchedule extends Tools
 
         $count_days_this_month = date('t', strtotime($start_date->format('Y-m-d')));
 
-        $paydate = self::processing('check_pay_date', new \DateTime($paydate->format('Y-m-' . $first_pay_day)));
+        $paydate = Utils::processing('check_pay_date', new \DateTime($paydate->format('Y-m-' . $first_pay_day)));
 
         if (date_diff($paydate, $start_date)->days <= $free_period) {
             $plus_loan_percents = round(($percent / 100) * $amount * date_diff($paydate, $start_date)->days, 2);

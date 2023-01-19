@@ -26,7 +26,7 @@ class Cards extends Model
             ->where('base_card', 1)
             ->first();
         if (is_null($card)) {
-            $card = Card::where('user_id', $userId)
+            $card = self::where('user_id', $userId)
                 ->first();
         }
 

@@ -4,9 +4,7 @@ namespace App\Account;
 
 use App\Models\Addresses;
 use App\Models\Companies;
-use App\Models\Contacts;
 use App\Models\Users;
-use Illuminate\Http\Request;
 
 class Profile extends Account
 {

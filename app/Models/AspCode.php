@@ -13,7 +13,7 @@ class AspCode extends Model
 
     public static function getAsp($userId, $orderId) {
 
-        $asp = AspCode::where('user_id', $userId)
+        $asp = self::where('user_id', $userId)
             ->where('order_id', $orderId)
             ->latest('id')
             ->first();
@@ -23,12 +23,12 @@ class AspCode extends Model
 
     public static function getAspEndReg($userId, $orderId) {
 
-        $firstAsp = Document::where('user_id', $userId)
+        $firstAsp = Documents::where('user_id', $userId)
             ->where('order_id', $orderId)
             ->where('type', 'SOGLASIE_RABOTODATEL')
             ->first();
 
-        $asp = AspCode::where('user_id', $userId)
+        $asp = self::where('user_id', $userId)
             ->where('order_id', $orderId)
             ->latest('id')
             ->first();
@@ -48,7 +48,7 @@ class AspCode extends Model
 
     public static function getFirstAsp($userId, $orderId) {
 
-        $asp = AspCode::where('user_id', $userId)
+        $asp = self::where('user_id', $userId)
             ->where('order_id', $orderId)
             ->first();
 

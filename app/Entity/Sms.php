@@ -90,7 +90,7 @@ class Sms
         $user = Users::where('phone_mobile', $phone)->first();
 
 
-        if (!empty($user) && $step == 'auth') {
+        if (!empty($user)) {
             Cookies::doExpireTokens($user->id);
             $userId = $user->id;
         } else {
