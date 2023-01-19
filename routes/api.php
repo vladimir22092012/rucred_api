@@ -25,6 +25,7 @@ use App\Info\Calculator;
 use App\Http\Controllers\StepsControllers\ProfunionController;
 use App\Http\Controllers\StepsControllers\PhotosController;
 use App\Http\Controllers\StepsControllers\LastStepController;
+use App\Http\Controllers\StepsControllers\ChangeLoanSettingsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -78,4 +79,6 @@ Route::middleware([TokenCheck::class])->group(function () {
     Route::post('/step/profunion', [ProfunionController::class, 'action']);
     Route::post('/step/photos', [PhotosController::class, 'action']);
     Route::post('/step/end', [LastStepController::class, 'action']);
+
+    Route::post('/loan/settings/change', [ChangeLoanSettingsController::class, 'action']);
 });
