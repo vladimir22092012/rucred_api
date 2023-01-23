@@ -38,9 +38,8 @@ class PhotosController extends StepsController
 
             $new_filename = md5(microtime() . rand()) . '.' . $ext;
 
-            if (!file_exists($_SERVER['DOCUMENT_ROOT'] . "/../files/users/" . $userId)) {
+            if (!file_exists($_SERVER['DOCUMENT_ROOT'] . "/../files/users/" . $userId))
                 mkdir($_SERVER['DOCUMENT_ROOT'] . "/../files/users/" . $userId, 0777, true);
-            }
 
             $files[$i]->move($_SERVER['DOCUMENT_ROOT'] . "/../files/users/" . $userId . '/' . $new_filename);
 
