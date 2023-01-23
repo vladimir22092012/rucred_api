@@ -22,7 +22,7 @@ class PhotosController extends StepsController
             $size /= 1048576;
 
             if ($size > 10)
-                return response('Файл' . $types[$i] . 'превышает размер в 10 Мегабайт', 400);
+                return response('Файл ' . $types[$i] . ' превышает размер в 10 Мегабайт', 400);
 
             $ext = pathinfo($files[$i]->getFilename(), PATHINFO_EXTENSION);
             $new_filename = md5(microtime() . rand()) . '.' . $ext;
