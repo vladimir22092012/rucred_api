@@ -182,6 +182,8 @@ class LastStepController extends StepsController
         //Запускаем скоринг
         Scoring::addScorings($userId, $order->id);
 
+        Documents::where('order_id', $order->id)->delete();
+
         //Создаем документы(конец регистрации)
         Documents::createDocsEndRegistrarion($userId, $order->id);
 
