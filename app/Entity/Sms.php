@@ -109,19 +109,21 @@ class Sms
 
         UsersTokens::insert($insert);
 
-        $uid = rand(000000000, 999999999);
+        if (!empty($userId)) {
+            $uid = rand(000000000, 999999999);
 
-        $aspData = [
-            'user_id'    => $userId,
-            'order_id'   => null,
-            'code'       => $code,
-            'recepient'  => $phone,
-            'type'       => 'sms',
-            'created'    => date('Y-m-d H:i:s'),
-            'uid'        => $uid
-        ];
+            $aspData = [
+                'user_id' => $userId,
+                'order_id' => null,
+                'code' => $code,
+                'recepient' => $phone,
+                'type' => 'sms',
+                'created' => date('Y-m-d H:i:s'),
+                'uid' => $uid
+            ];
 
-        AspCode::insert($aspData);
+            AspCode::insert($aspData);
+        }
 
         if (!empty($user) && $user->stage_registration == 8 && $step == 'reg')
             return response($newToken, 301);
