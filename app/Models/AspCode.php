@@ -11,11 +11,10 @@ class AspCode extends Model
     protected $guarded = [];
     public $timestamps = false;
 
-    public static function getAsp($userId, $orderId) {
+    public static function getAsp($userId) {
 
         $asp = self::where('user_id', $userId)
-            ->where('order_id', $orderId)
-            ->latest('id')
+            ->orderBy('id', 'desc')
             ->first();
 
         return $asp;
