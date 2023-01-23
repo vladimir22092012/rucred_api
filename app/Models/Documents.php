@@ -151,7 +151,7 @@ class Documents extends Model
 
         $order = Orders::getUnfinished($userId);
         $order->order_id = $order->id;
-        $code_asp = AspCode::getAsp($userId, $order->id);
+        $code_asp = AspCode::getAsp($userId);
         $user->code_asp = $code_asp;
 
         $types = [
@@ -253,7 +253,7 @@ class Documents extends Model
 
         $order->passport_serial = $user->passport_serial;
 
-        $code_asp = AspCode::getAsp($userId, $orderId);
+        $code_asp = AspCode::getAsp($userId);
         $order->code_asp = $code_asp;
 
         $types = [
