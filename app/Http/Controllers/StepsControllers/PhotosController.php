@@ -24,7 +24,18 @@ class PhotosController extends StepsController
             if ($size > 10)
                 return response(['message' =>'Файл ' . $types[$i] . ' превышает размер в 10 Мегабайт', 'type' => $types[$i]], 400);
 
-            $ext =$files[$i]->extension();
+            $ext = $files[$i]->extension();
+
+            $approvedFormat =
+                [
+                    'jpeg',
+                    'png',
+                    'jpg'
+                ];
+
+            if(!in_array($ext, $approvedFormat))
+                return response(['message' =>'Файл ' . $types[$i] . ' имеет не поддерживаемый формат', 'type' => $types[$i]], 400);
+
             $new_filename = md5(microtime() . rand()) . '.' . $ext;
 
             if (!file_exists($_SERVER['DOCUMENT_ROOT'] . "/../files/users/" . $userId)) {
