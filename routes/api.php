@@ -26,6 +26,7 @@ use App\Http\Controllers\StepsControllers\ProfunionController;
 use App\Http\Controllers\StepsControllers\PhotosController;
 use App\Http\Controllers\StepsControllers\LastStepController;
 use App\Http\Controllers\StepsControllers\ChangeLoanSettingsController;
+use App\Http\Controllers\RepeatLoans\PopUpController;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,6 +67,8 @@ Route::middleware([TokenCheck::class])->group(function () {
     Route::post('/lk/requisites/change', [RequisitesController::class, 'changeRequisites']);
 
     Route::post('/lk/documents', [DocumentsController::class, 'get']);
+
+    Route::post('/lk/loan/repeat/create', [PopUpController::class, 'get']);
 
     Route::post('/mail/send', [MailController::class, 'send']);
     Route::post('/mail/check', [MailController::class, 'check']);
