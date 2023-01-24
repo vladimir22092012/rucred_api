@@ -27,6 +27,7 @@ use App\Http\Controllers\StepsControllers\PhotosController;
 use App\Http\Controllers\StepsControllers\LastStepController;
 use App\Http\Controllers\StepsControllers\ChangeLoanSettingsController;
 use App\Http\Controllers\RepeatLoans\PopUpController;
+use App\Http\Controllers\AccountControllers\MessengersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,6 +53,8 @@ Route::middleware([TokenCheck::class])->group(function () {
     Route::post('/lk/profile', [Profile::class, 'get']);
     Route::post('/lk/photos/get', [Photos::class, 'get']);
     Route::post('/lk/photos/add', [Photos::class, 'add']);
+
+    Route::post('/lk/messengers/add', [MessengersController::class, 'add']);
 
     Route::post('/lk/general/get_stage', [General::class, 'getStage']);
     Route::post('/lk/general/get_user', [General::class, 'getUser']);

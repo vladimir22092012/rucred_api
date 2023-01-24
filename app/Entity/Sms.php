@@ -138,6 +138,20 @@ class Sms
             return response($newToken, 200);
     }
 
+    public static function sendTelegramLink($phone, $message)
+    {
+        $login = 'RuCred';
+        $password = 'Ee6-eEF-w7f';
+
+        $phone = self::clear_phone($phone);
+
+        $url = 'http://smsc.ru/sys/send.php?login='.$login.'&psw='.$password.'&phones='.$phone.'&mes='.$message.'';
+
+        $resp = file_get_contents($url);
+
+        return $resp;
+    }
+
     public static function clear_phone($phone)
     {
         $remove_symbols = [
