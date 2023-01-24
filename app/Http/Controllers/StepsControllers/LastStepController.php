@@ -185,12 +185,8 @@ class LastStepController extends StepsController
         Documents::where('order_id', $order->id)->delete();
 
         Documents::createDocsForRegistration($userId);
-
-        //Создаем документы(конец регистрации)
-        Documents::createDocsEndRegistrarion($userId, $order->id);
-
-        //Создаем документы
         Documents::createDocsAfterRegistrarion($userId, $order->id);
+        Documents::createDocsEndRegistrarion($userId, $order->id);
 
         //Создание контракта
         $number = $order->uid;
