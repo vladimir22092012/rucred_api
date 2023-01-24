@@ -50,7 +50,8 @@ Route::get('/info/calculator', [Calculator::class, 'get']);
 
 Route::middleware([TokenCheck::class])->group(function () {
     Route::post('/lk/profile', [Profile::class, 'get']);
-    Route::post('/lk/photos', [Photos::class, 'get']);
+    Route::post('/lk/photos/get', [Photos::class, 'get']);
+    Route::post('/lk/photos/add', [Photos::class, 'add']);
 
     Route::post('/lk/general/get_stage', [General::class, 'getStage']);
     Route::post('/lk/general/get_user', [General::class, 'getUser']);
