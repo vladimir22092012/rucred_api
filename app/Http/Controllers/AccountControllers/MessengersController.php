@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\AccountControllers;
 
-use App\Application\Actions\Messengers\Telegram;
-use App\Application\Actions\Messengers\Viber;
+use App\Entity\Telegram;
+use App\Entity\Viber;
 use Illuminate\Http\Request;
 
 class MessengersController extends AccountController
