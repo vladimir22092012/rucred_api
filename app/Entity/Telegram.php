@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Application\Actions\Messengers;
+namespace App\Entity;
 
 use App\Entity\Sms;
 use App\Models\Contacts;
