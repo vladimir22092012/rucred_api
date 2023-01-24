@@ -133,7 +133,7 @@ class Documents extends Model
         return $document;
     }
 
-    public static function createDocsForRegistration($userId)
+    public static function createDocsForRegistration($userId, $orderId = null)
     {
         $user = Users::find($userId);
         $contacts = Contacts::getContacts($userId);
@@ -149,7 +149,11 @@ class Documents extends Model
         $user->regaddress  = $regaddress->adressfull;
         $user->faktaddress = $faktaddress->adressfull;
 
-        $order = Orders::getUnfinished($userId);
+        if(!empty($orderId))
+            $order = Orders::find($orderId);
+        else
+            $order = Orders::getUnfinished($userId);
+
         $order->order_id = $order->id;
         $code_asp = AspCode::getAsp($userId);
         $user->code_asp = $code_asp;

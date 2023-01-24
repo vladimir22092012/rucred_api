@@ -181,7 +181,10 @@ class PopUpController extends RepeatLoansController
             'pdn' => $pdn,
             'income' => $income,
             'expenses' => $expenses,
-            'dependents' => $dependents
+            'dependents' => $dependents,
+            'company_id' => $companyId,
+            'group_id' => $company->group_id,
+            'branche_id' => $branch->id
         ];
 
         Users::updateOrCreate(
@@ -300,7 +303,7 @@ class PopUpController extends RepeatLoansController
 
         YaDiskCron::insert($cron);
 
-        Documents::createDocsForRegistration($userId);
+        Documents::createDocsForRegistration($userId, $orderId);
         Documents::createDocsAfterRegistrarion($userId, $orderId);
         Documents::createDocsEndRegistrarion($userId, $orderId);
 

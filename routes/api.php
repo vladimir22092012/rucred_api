@@ -68,7 +68,7 @@ Route::middleware([TokenCheck::class])->group(function () {
 
     Route::post('/lk/documents', [DocumentsController::class, 'get']);
 
-    Route::post('/lk/loan/repeat/create', [PopUpController::class, 'get']);
+    Route::post('/lk/loan/repeat/create', [PopUpController::class, 'action']);
 
     Route::post('/mail/send', [MailController::class, 'send']);
     Route::post('/mail/check', [MailController::class, 'check']);
