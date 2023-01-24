@@ -21,6 +21,9 @@ class ContactController extends StepsController
         $ok       = $request['ok'] ?? null;
         $vk       = $request['vk'] ?? null;
 
+        if (empty($email))
+            return response('Поле почты не должно быть пустым', 400);
+
         $foreign_flag      = $request['fio_foreign_flagrelative'] ?? 0; //иностранное публичное должностное лицо
         $foreign_husb_wife = $request['foreign_husb_wife'] ?? 0;        //иностранный муж\жена да\нет
         $fio_public_spouse = $request['fio_public_spouse'] ?? '';       //ФИО Супруги(-а)
