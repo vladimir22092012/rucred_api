@@ -24,14 +24,7 @@ class Telegram
 
         Sms::sendTelegramLink($user->phone_mobile, $message);
 
-        $contact =
-            [
-                'user_id' => $userId,
-                'token' => $token,
-                'is_manager' => 0
-            ];
-
-        TelegramUsers::insert($contact);
+        TelegramUsers::updateOrCreate(['user_id' => $userId],['token' => $token, 'is_manager' => 0]);
 
         Contacts::where(['user_id' => $userId, 'type' => 'telegram'])->delete();
 
