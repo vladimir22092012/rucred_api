@@ -108,7 +108,7 @@ class LastStepController extends StepsController
             'probably_return_sum'   => $probably_return_sum,
             'period'                => $orderPeriod,
             'percent'               => $percents,
-            'status'                => 0,
+            'status'                => 12,
             'requisite_id'          => ($bankRequisite) ? $bankRequisite->id : null,
             'card_id'               => ($card) ? $card->id : null,
         ];
@@ -183,6 +183,8 @@ class LastStepController extends StepsController
         Scoring::addScorings($userId, $order->id);
 
         Documents::where('order_id', $order->id)->delete();
+
+        Documents::createDocsForRegistration($userId);
 
         //Создаем документы(конец регистрации)
         Documents::createDocsEndRegistrarion($userId, $order->id);

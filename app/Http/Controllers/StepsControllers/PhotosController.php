@@ -41,7 +41,7 @@ class PhotosController extends StepsController
             if (!file_exists($_SERVER['DOCUMENT_ROOT'] . "/../files/users/" . $userId))
                 mkdir($_SERVER['DOCUMENT_ROOT'] . "/../files/users/" . $userId, 0777, true);
 
-            $files[$i]->move($_SERVER['DOCUMENT_ROOT'] . "/../files/users/" . $userId . '/' . $new_filename);
+            $files[$i]->move($_SERVER['DOCUMENT_ROOT'] . "/../files/users/" . $userId . '/', $new_filename);
 
             Files::updateOrCreate(
                 ['user_id' => $userId, 'type' => $types[$i]],

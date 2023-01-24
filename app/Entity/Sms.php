@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Models\AspCode;
+use App\Models\Orders;
 use App\Models\Users;
 use App\Models\UsersTokens;
 use Illuminate\Http\Request;
@@ -129,7 +130,11 @@ class Sms
             return response($newToken, 301);
         elseif (!empty($user) && $user->stage_registration != 8 && $step == 'reg')
             return response(['stage' => $user->stage_registration, 'token' => $newToken], 302);
-        else
+        elseif (!empty($user) && $step == 'endReg') {
+            $order = Orders::getUnfinished($userId);
+            Orders::where('id', $order->id)->update(['status' => 0]);
+            return response($newToken, 200);
+        } else
             return response($newToken, 200);
     }
 

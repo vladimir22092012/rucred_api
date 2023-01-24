@@ -29,7 +29,7 @@ class TokenCheck
 
         if ($validToken == 'valid')
             return $next($request);
-        elseif (empty($userToken))
+        elseif (empty($token))
             return response('Токен отсутствует', 404);
         else
             return response('Не прошел проверку подлинности', 401);
