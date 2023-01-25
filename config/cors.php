@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:8081', 'https://dev.xn--80aj6acdgc.xn--80asehdb', 'http://localhost:8080'],
+    'allowed_origins' => ['http://localhost:8081', 'https://dev.xn--80aj6acdgc.xn--80asehdb', 'http://localhost:8080', 'https://xn--80aj6acdgc.xn--80asehdb'],
 
     'allowed_origins_patterns' => ['*'],
 
