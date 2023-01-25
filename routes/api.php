@@ -82,7 +82,8 @@ Route::middleware([TokenCheck::class])->group(function () {
     Route::post('/lk/loan/repeat/passport', [RepeatPassport::class, 'action']);
     Route::post('/lk/loan/repeat/work', [WorkController::class, 'action']);
     Route::post('/lk/loan/repeat/settings', [LoanSettingsController::class, 'action']);
-    Route::post('/lk/loan/repeat/requisites', [RepeatRequisites::class, 'action']);
+    Route::post('/lk/loan/repeat/requisites/card/add', [RepeatRequisites::class, 'addCard']);
+    Route::post('/lk/loan/repeat/requisites/account/add', [RepeatRequisites::class, 'addAccount']);
     Route::post('/lk/loan/repeat/lastStep', [RepeatLastStep::class, 'action']);
 
     Route::post('/mail/send', [MailController::class, 'send']);
