@@ -205,7 +205,7 @@ class LastStepController extends RepeatLoansController
             'amount'             => $order->amount,
             'period'             => $orderPeriod,
             'base_percent'       => $percents,
-            'status'             => 0,
+            'status'             => 12,
             'loan_body_summ'     => $order->amount,
             'loan_percents_summ' => 0,
             'loan_peni_summ'     => 0
