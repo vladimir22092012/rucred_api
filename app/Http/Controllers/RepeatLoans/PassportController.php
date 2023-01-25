@@ -52,8 +52,8 @@ class PassportController extends RepeatLoansController
             return response($msg, 406);
         }
 
-        Addresses::where(['id', $user->regaddress_id])->update(['adressfull' => $regadressfull]);
-        Addresses::where(['id', $user->faktaddress_id])->update(['adressfull' => $faktadressfull]);
+        Addresses::where('id', $user->regaddress_id)->update(['adressfull' => $regadressfull]);
+        Addresses::where('id', $user->faktaddress_id)->update(['adressfull' => $faktadressfull]);
 
         $userData = [
             'stage_registration' => 2,
