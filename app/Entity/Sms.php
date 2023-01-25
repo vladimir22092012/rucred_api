@@ -66,7 +66,7 @@ class Sms
         ];
 
         SmsDB::insert($data);
-        $msg = 'Код отправлен';
+        $msg = $resp;
 
 
         return response($msg, 200);
