@@ -265,7 +265,7 @@ class PopUpController extends RepeatLoansController
         //Создание контракта
         $number = $order_uid;
         $number = explode(' ', $number);
-        $count_contracts = Contracts::where('user_id', $userId)->count();
+        $count_contracts = Contracts::where('user_id', $userId)->whereIn('status', [2,3,4])->count();
         $count_contracts++;
 
         $count_contracts = str_pad("$count_contracts", 2, '0', STR_PAD_LEFT);
