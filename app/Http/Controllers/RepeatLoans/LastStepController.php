@@ -215,7 +215,7 @@ class LastStepController extends RepeatLoansController
             $contractData
         );
 
-        Orders::where('id', $order->id)->update(['contract_id' => $contract->id]);
+        Orders::updateOrCreate(['id' => $order->id], ['contract_id' => $contract->id]);
 
         $cron =
             [
