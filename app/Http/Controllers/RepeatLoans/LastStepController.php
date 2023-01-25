@@ -108,7 +108,7 @@ class LastStepController extends RepeatLoansController
             'probably_return_sum'   => $probably_return_sum,
             'period'                => $orderPeriod,
             'percent'               => $percents,
-            'status'                => 12,
+            'status'                => 0,
             'requisite_id'          => ($bankRequisite) ? $bankRequisite->id : null,
             'card_id'               => ($card) ? $card->id : null,
         ];
