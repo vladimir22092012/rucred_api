@@ -194,7 +194,7 @@ class LastStepController extends StepsController
         $count_contracts = Contracts::where('user_id', $userId)->whereIn('status', [2,3,4])->count();
 
         if ($count_contracts != 0) {
-            $count_contracts = str_pad($count_contracts+1, 2, '0', STR_PAD_LEFT);
+            $count_contracts = str_pad($count_contracts, 2, '0', STR_PAD_LEFT);
         } else {
             $count_contracts = '01';
         }
