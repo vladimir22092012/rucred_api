@@ -59,7 +59,7 @@ class Photos extends Account
 
         $file->move($_SERVER['DOCUMENT_ROOT'] . "/../files/users/" . $userId . '/', $new_filename);
 
-        Files::where('type', $type)->delete();
+        Files::where('user_id', $userId)->where('type', $type)->delete();
 
         Files::updateOrCreate(
             ['user_id' => $userId, 'type' => $type],
