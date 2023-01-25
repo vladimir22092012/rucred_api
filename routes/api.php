@@ -28,6 +28,11 @@ use App\Http\Controllers\StepsControllers\LastStepController;
 use App\Http\Controllers\StepsControllers\ChangeLoanSettingsController;
 use App\Http\Controllers\RepeatLoans\PopUpController;
 use App\Http\Controllers\AccountControllers\MessengersController;
+use App\Http\Controllers\RepeatLoans\LastStepController as RepeatLastStep;
+use App\Http\Controllers\RepeatLoans\LoanSettingsController;
+use App\Http\Controllers\RepeatLoans\PassportController as RepeatPassport;
+use App\Http\Controllers\RepeatLoans\RequisitesController as RepeatRequisites;
+use App\Http\Controllers\RepeatLoans\WorkController;
 
 /*
 |--------------------------------------------------------------------------
@@ -72,7 +77,13 @@ Route::middleware([TokenCheck::class])->group(function () {
 
     Route::post('/lk/documents', [DocumentsController::class, 'get']);
 
-    Route::post('/lk/loan/repeat/create', [PopUpController::class, 'action']);
+    //Route::post('/lk/loan/repeat/create', [PopUpController::class, 'action']);
+
+    Route::post('/lk/loan/repeat/passport', [RepeatPassport::class, 'action']);
+    Route::post('/lk/loan/repeat/work', [WorkController::class, 'action']);
+    Route::post('/lk/loan/repeat/settings', [LoanSettingsController::class, 'action']);
+    Route::post('/lk/loan/repeat/requisites', [RepeatRequisites::class, 'action']);
+    Route::post('/lk/loan/repeat/lastStep', [RepeatLastStep::class, 'action']);
 
     Route::post('/mail/send', [MailController::class, 'send']);
     Route::post('/mail/check', [MailController::class, 'check']);
