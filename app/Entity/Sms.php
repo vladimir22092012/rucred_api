@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Models\AspCode;
 use App\Models\CommunicationTheme;
+use App\Models\Documents;
 use App\Models\NotificationCron;
 use App\Models\Orders;
 use App\Models\Ticket;
@@ -136,6 +137,13 @@ class Sms
             return response(['stage' => $user->stage_registration, 'token' => $newToken], 302);
         elseif (!empty($user) && $step == 'endReg') {
             $order = Orders::getUnfinished($userId);
+
+            Documents::where('order_id', $order->id)->delete();
+
+            Documents::createDocsForRegistration($userId);
+            Documents::createDocsAfterRegistrarion($userId, $order->id);
+            Documents::createDocsEndRegistrarion($userId, $order->id);
+
             Orders::where('id', $order->id)->update(['status' => 0]);
 
             $communicationTheme = CommunicationTheme::find(18);
