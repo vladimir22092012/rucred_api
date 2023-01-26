@@ -3,7 +3,11 @@
 namespace App\Entity;
 
 use App\Models\AspCode;
+use App\Models\CommunicationTheme;
+use App\Models\NotificationCron;
 use App\Models\Orders;
+use App\Models\Ticket;
+use App\Models\TicketsMessages;
 use App\Models\Users;
 use App\Models\UsersTokens;
 use Illuminate\Http\Request;
@@ -133,6 +137,42 @@ class Sms
         elseif (!empty($user) && $step == 'endReg') {
             $order = Orders::getUnfinished($userId);
             Orders::where('id', $order->id)->update(['status' => 0]);
+
+            $communicationTheme = CommunicationTheme::find(18);
+            $ticket = [
+                'creator'           => 0,
+                //'creator_company'   => 2,
+                'client_lastname'   => $user->lastname,
+                'client_firstname'  => $user->firstname,
+                'client_patronymic' => $user->patronymic,
+                'head'              => $communicationTheme->head,
+                'text'              => $communicationTheme->text,
+                'theme_id'          => 18,
+                'company_id'        => $order->company_id,
+                'group_id'          => 2,//$order->group_id,
+                'order_id'          => $order->id,
+                'status'            => 0
+            ];
+
+            $tiketId = Ticket::insertGetId($ticket);
+
+            //Сообщение в тикет
+            $message =
+                [
+                    'message'    => $communicationTheme->text,
+                    'ticket_id'  => $tiketId,
+                    'manager_id' => 0
+                ];
+
+            TicketsMessages::insertGetId($message);
+
+            //Добавляем в расписание крон
+            $cron = [
+                'ticket_id'    => $tiketId,
+                'is_complited' => 0
+            ];
+            NotificationCron::insert($cron);
+
             return response($newToken, 200);
         } else
             return response($newToken, 200);
