@@ -265,6 +265,8 @@ class Documents extends Model
             'SOGLASIE_RUKRED_RABOTODATEL',
             'SOGLASIE_RABOTODATEL',
             'SOGLASIE_NA_KRED_OTCHET',
+            'INDIVIDUALNIE_USLOVIA_ONL',
+            'GRAFIK_OBSL_MKR'
         ];
 
         foreach ($types as $key => $type) {
