@@ -23,7 +23,6 @@ class AspCode extends Model
     public static function getAspEndReg($userId, $orderId) {
 
         $asp = self::where('user_id', $userId)
-            ->where('order_id', $orderId)
             ->orderBy('id', 'desc')
             ->first();
 
