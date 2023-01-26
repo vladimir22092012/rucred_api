@@ -22,25 +22,10 @@ class AspCode extends Model
 
     public static function getAspEndReg($userId, $orderId) {
 
-        $firstAsp = Documents::where('user_id', $userId)
-            ->where('order_id', $orderId)
-            ->where('type', 'SOGLASIE_RABOTODATEL')
-            ->first();
-
         $asp = self::where('user_id', $userId)
             ->where('order_id', $orderId)
-            ->latest('id')
+            ->orderBy('id', 'desc')
             ->first();
-
-        if(empty($firstAsp))
-            return $asp;
-
-        if(empty($asp))
-            return $firstAsp;
-
-        if ($firstAsp->asp_id == $asp->id) {
-            $asp = null;
-        }
 
         return $asp;
     }
