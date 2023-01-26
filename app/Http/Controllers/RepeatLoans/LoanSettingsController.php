@@ -59,7 +59,7 @@ class LoanSettingsController extends RepeatLoansController
             'order_source_id' => $order_source_id,
             'group_id'   => $user->group_id,
             'company_id' => $user->company_id,
-            'branche_id' => $user->branch_id,
+            'branche_id' => $user->branche_id,
             'uid'        => $order_uid,
         ];
 
