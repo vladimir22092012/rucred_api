@@ -27,7 +27,7 @@ class AspCode extends Model
             ->orderBy('id', 'desc')
             ->first();
 
-        return $asp;
+        return $asp->id;
     }
 
     public static function getFirstAsp($userId, $orderId) {
