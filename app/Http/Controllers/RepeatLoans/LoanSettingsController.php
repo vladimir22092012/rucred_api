@@ -50,8 +50,6 @@ class LoanSettingsController extends RepeatLoansController
         $orderData = [
             'amount' => $amount,
             'date' => date('Y-m-d H:i:s'),
-            'user_id' => self::$userId,
-            'status' => 12,
             'offline' => 0,
             'charge' => 0.00,
             'insure' => 0.00,
@@ -65,8 +63,7 @@ class LoanSettingsController extends RepeatLoansController
             'uid'        => $order_uid,
         ];
 
-        $newOrder = new Orders($orderData);
-        $newOrder->save();
+        Orders::updateOrCreate(['user_id' => self::$userId, 'status' => 12, 'is_archived' => 0], $orderData);
 
         Users::where('id', self::$userId)->update(['stage_registration' => 4]);
 
