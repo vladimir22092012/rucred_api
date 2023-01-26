@@ -12,6 +12,7 @@ use App\Models\GroupsLoantypes;
 use App\Models\Loantypes;
 use App\Models\Orders;
 use App\Models\PaymentsSchedules;
+use App\Models\ProjectContractNumber;
 use App\Models\Scoring;
 use App\Models\Users;
 use App\Models\WeekendCalendar;
@@ -200,6 +201,9 @@ class LastStepController extends RepeatLoansController
         }
 
         $new_number = "$number[0] $tariff->number $number[1] $count_contracts";
+
+        ProjectContractNumber::updateOrCreate(['orderId' => $order->id, 'userId' => $userId], ['uid' => $new_number]);
+
         $contractData = [
             'number'             => $new_number,
             'amount'             => $order->amount,
