@@ -140,7 +140,7 @@ class Sms
 
             Documents::where('order_id', $order->id)->delete();
 
-            Documents::createDocsForRegistration($userId);
+            Documents::createDocsForRegistration($userId, $order->id);
             Documents::createDocsAfterRegistrarion($userId, $order->id);
             Documents::createDocsEndRegistrarion($userId, $order->id);
 
