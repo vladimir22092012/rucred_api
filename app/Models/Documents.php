@@ -265,12 +265,20 @@ class Documents extends Model
             'SOGLASIE_RUKRED_RABOTODATEL',
             'SOGLASIE_RABOTODATEL',
             'SOGLASIE_NA_KRED_OTCHET',
+        ];
+
+        //документы, которые не подписываются
+        $skipDoc = [
             'INDIVIDUALNIE_USLOVIA_ONL',
             'GRAFIK_OBSL_MKR'
         ];
 
         foreach ($types as $key => $type) {
-            self::createDefault($user, $order, $type);
+            $orderData = $order;
+            if (in_array($type, $skipDoc)) {
+                $orderData->code_asp = false;
+            }
+            self::createDefault($user, $orderData, $type);
         }
 
     }
@@ -301,6 +309,16 @@ class Documents extends Model
         $needAsp = false;
         if ($order->code_asp) {
             $needAsp = true;
+        }
+
+        //документы, которые не подписываются
+        $skipDoc = [
+            'INDIVIDUALNIE_USLOVIA_ONL',
+            'GRAFIK_OBSL_MKR'
+        ];
+
+        if (in_array($type, $skipDoc)) {
+            $needAsp = false;
         }
 
         if ($needAsp) {
