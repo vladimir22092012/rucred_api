@@ -267,18 +267,8 @@ class Documents extends Model
             'SOGLASIE_NA_KRED_OTCHET',
         ];
 
-        //документы, которые не подписываются
-        $skipDoc = [
-            'INDIVIDUALNIE_USLOVIA_ONL',
-            'GRAFIK_OBSL_MKR'
-        ];
-
         foreach ($types as $key => $type) {
-            $orderData = $order;
-            if (in_array($type, $skipDoc)) {
-                $orderData->code_asp = false;
-            }
-            self::createDefault($user, $orderData, $type);
+            self::createDefault($user, $order, $type);
         }
 
     }
