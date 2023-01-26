@@ -303,16 +303,6 @@ class Documents extends Model
             $needAsp = true;
         }
 
-        //документы, которые не подписываются
-        $skipDoc = [
-            'INDIVIDUALNIE_USLOVIA_ONL',
-            'GRAFIK_OBSL_MKR'
-        ];
-
-        if (in_array($type, $skipDoc)) {
-            $needAsp = false;
-        }
-
         if ($needAsp) {
             $data['asp_id'] = $order->code_asp->id;
         }
