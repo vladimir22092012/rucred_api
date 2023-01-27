@@ -128,7 +128,8 @@ class Sms
                 'uid' => $uid
             ];
 
-            AspCode::insert($aspData);
+            $aspCode = new AspCode((object)$aspData);
+            $aspCode->save();
         }
 
         if (!empty($user) && $user->stage_registration == 8 && $step == 'reg')
@@ -139,6 +140,8 @@ class Sms
             $order = Orders::getUnfinished($userId);
 
             Documents::where('order_id', $order->id)->delete();
+
+            $aspCode->update('order_id', $order->id);
 
             Documents::createDocsForRegistration($userId, $order->id);
             Documents::createDocsAfterRegistrarion($userId, $order->id);
