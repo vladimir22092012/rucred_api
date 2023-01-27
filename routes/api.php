@@ -26,13 +26,13 @@ use App\Http\Controllers\StepsControllers\ProfunionController;
 use App\Http\Controllers\StepsControllers\PhotosController;
 use App\Http\Controllers\StepsControllers\LastStepController;
 use App\Http\Controllers\StepsControllers\ChangeLoanSettingsController;
-use App\Http\Controllers\RepeatLoans\PopUpController;
 use App\Http\Controllers\AccountControllers\MessengersController;
 use App\Http\Controllers\RepeatLoans\LastStepController as RepeatLastStep;
 use App\Http\Controllers\RepeatLoans\LoanSettingsController;
 use App\Http\Controllers\RepeatLoans\PassportController as RepeatPassport;
 use App\Http\Controllers\RepeatLoans\RequisitesController as RepeatRequisites;
 use App\Http\Controllers\RepeatLoans\WorkController;
+use App\Http\Controllers\AccountControllers\NewLoanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,6 +64,8 @@ Route::middleware([TokenCheck::class])->group(function () {
     Route::post('/lk/general/get_stage', [General::class, 'getStage']);
     Route::post('/lk/general/get_user', [General::class, 'getUser']);
     Route::post('/lk/general/get_default_settlement', [General::class, 'getDefaultSettlement']);
+
+    Route::post('/lk/canSendNewLoan', [NewLoanController::class, 'checkAvailable']);
 
     Route::post('/lk/loans', [Loans::class, 'get']);
     Route::post('/lk/loans/active', [ActiveLoansController::class, 'get']);
