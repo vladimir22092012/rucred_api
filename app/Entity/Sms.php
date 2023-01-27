@@ -128,7 +128,7 @@ class Sms
                 'uid' => $uid
             ];
 
-            $aspCode = new AspCode((object)$aspData);
+            $aspCode = new AspCode($aspData);
             $aspCode->save();
         }
 
