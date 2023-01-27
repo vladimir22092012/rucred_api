@@ -11,6 +11,7 @@ use App\Models\Documents;
 use App\Models\GroupsLoantypes;
 use App\Models\Loantypes;
 use App\Models\Orders;
+use App\Models\OrganisationSettlement;
 use App\Models\PaymentsSchedules;
 use App\Models\ProjectContractNumber;
 use App\Models\Scoring;
@@ -27,28 +28,28 @@ class LastStepController extends RepeatLoansController
     {
         $userId = self::$userId;
 
-        $user  = Users::find($userId);
+        $user = Users::find($userId);
         $profunion = $user->profunion;
 
         //Расчет данных для ордера(с учетом профсоюза)
-        $order     = Orders::getUnfinished($userId);
+        $order = Orders::getUnfinished($userId);
         $branch_id = $order->branche_id;
-        $branch    = Branch::find($branch_id);
+        $branch = Branch::find($branch_id);
 
         $first_pay_day = $branch->payday;
-        $start_date    = $order->probably_start_date;
-        $amount        = $order->amount;
-        $tariff_id     = $order->loan_type;
-        $group_id      = $order->group_id;
+        $start_date = $order->probably_start_date;
+        $amount = $order->amount;
+        $tariff_id = $order->loan_type;
+        $group_id = $order->group_id;
 
         $tariff = Loantypes::find($tariff_id);
 
         $start_date = date('Y-m-d', strtotime($start_date));
-        $first_pay  = new \DateTime(date('Y-m-' . $first_pay_day, strtotime($start_date)));
-        $end_date   = date('Y-m-' . $first_pay_day, strtotime($start_date . '+' . $tariff->max_period . 'month'));
+        $first_pay = new \DateTime(date('Y-m-' . $first_pay_day, strtotime($start_date)));
+        $end_date = date('Y-m-' . $first_pay_day, strtotime($start_date . '+' . $tariff->max_period . 'month'));
 
         $start_date = new \DateTime($start_date);
-        $end_date   = new \DateTime($end_date);
+        $end_date = new \DateTime($end_date);
 
         if ($start_date > $first_pay) {
             $first_pay->add(new \DateInterval('P1M'));
@@ -74,21 +75,21 @@ class LastStepController extends RepeatLoansController
         $period = $tariff->max_period;
 
         $percentsGroup = GroupsLoantypes::getPercents($group_id, $tariff_id);
-        $percents      = $percentsGroup->standart_percents;
+        $percents = $percentsGroup->standart_percents;
 
         if ($profunion == 1) {
             $percents = $percentsGroup->preferential_percents;
         }
 
         $data = [
-            'amount'        => $amount,
-            'start_date'    => $order->probably_start_date,
-            'end_date'      => $end_date->format('Y-m-d H:i:s'),
+            'amount' => $amount,
+            'start_date' => $order->probably_start_date,
+            'end_date' => $end_date->format('Y-m-d H:i:s'),
             'first_pay_day' => $first_pay_day,
-            'percent'       => $percents,
-            'free_period'   => $tariff->free_period,
-            'min_period'    => $tariff->min_period,
-            'period'        => $period
+            'percent' => $percents,
+            'free_period' => $tariff->free_period,
+            'min_period' => $tariff->min_period,
+            'period' => $period
         ];
 
         if ($tariff->type == 'pdl') {
@@ -105,15 +106,14 @@ class LastStepController extends RepeatLoansController
         $card = Cards::getDefault($userId);
 
         $orderData = [
-            'probably_return_date'  => $end_date->format('Y-m-d H:i:s'),
-            'probably_return_sum'   => $probably_return_sum,
-            'period'                => $orderPeriod,
-            'percent'               => $percents,
-            'status'                => 12,
-            'requisite_id'          => ($bankRequisite) ? $bankRequisite->id : null,
-            'card_id'               => ($card) ? $card->id : null,
+            'probably_return_date' => $end_date->format('Y-m-d H:i:s'),
+            'probably_return_sum' => $probably_return_sum,
+            'period' => $orderPeriod,
+            'percent' => $percents,
+            'status' => 12,
+            'requisite_id' => ($bankRequisite) ? $bankRequisite->id : null,
+            'card_id' => ($card) ? $card->id : null,
         ];
-
 
 
         //математические формулы и расчеты
@@ -157,9 +157,9 @@ class LastStepController extends RepeatLoansController
         $pdn = round(($month_pay / $user->income) * 100, 2);
 
         $userData = [
-            'profunion'          => $profunion,
+            'profunion' => $profunion,
             'stage_registration' => 8,
-            'pdn'                => $pdn
+            'pdn' => $pdn
         ];
 
         Users::where('id', $userId)->update($userData);
@@ -185,17 +185,61 @@ class LastStepController extends RepeatLoansController
 
         Documents::where('order_id', $order->id)->delete();
 
-        Documents::createDocsForRegistration($userId, $order->id);
-        Documents::createDocsAfterRegistrarion($userId, $order->id);
-        Documents::createDocsEndRegistrarion($userId, $order->id);
+        $types = array(
+            'SOGLASIE_NA_KRED_OTCHET',
+            'SOGLASIE_NA_OBR_PERS_DANNIH',
+            'SOGLASIE_RABOTODATEL',
+            'SOGLASIE_RUKRED_RABOTODATEL',
+            'ZAYAVLENIE_NA_PERECHISL_CHASTI_ZP',
+            'ZAYAVLENIE_ZP_V_SCHET_POGASHENIYA_MKR',
+            'INDIVIDUALNIE_USLOVIA_ONL',
+            'GRAFIK_OBSL_MKR',
+            'PERECHISLENIE_ZAEMN_SREDSTV',
+            'OBSHIE_USLOVIYA'
+        );
+
+        $defaultSettlement = OrganisationSettlement::getDefault();
+
+        if ($defaultSettlement == 2)
+            $types[] = 'SOGLASIE_MINB';
+        else
+            $types[] = 'SOGLASIE_RDB';
+
+        foreach ($types as $type) {
+            $params = $order->toArray();
+            $arrUser = $user->toArray();
+
+            foreach ($arrUser as $key => $value) {
+                if ($key == 'email') {
+                    continue;
+                }
+                $params[$key] = $value;
+            }
+
+            $data = [
+                'contract_id'    => $order->contract_id,
+                'name'           => Documents::$names[$type],
+                'template'       => Documents::$templates[$type],
+                'client_visible' => Documents::$client_visible[$type],
+                'params'         => serialize((object)$params),
+                'created'        => date('Y-m-d H:i:s'),
+                'numeration'     => Documents::$numeration[$type],
+                'hash'           => sha1(rand(11111, 99999))
+            ];
+
+            Documents::updateOrCreate(
+                ['user_id' => $user->id, 'order_id' => $order->id, 'type' => $type],
+                $data
+            );
+        }
 
         //Создание контракта
         $number = $order->uid;
         $number = explode(' ', $number);
-        $count_contracts = Contracts::where('user_id', $userId)->whereIn('status', [2,3,4])->count();
+        $count_contracts = Contracts::where('user_id', $userId)->whereIn('status', [2, 3, 4])->count();
 
         if (!empty($count_contracts)) {
-            $count_contracts = str_pad($count_contracts+1, 2, '0', STR_PAD_LEFT);
+            $count_contracts = str_pad($count_contracts + 1, 2, '0', STR_PAD_LEFT);
         } else {
             $count_contracts = '01';
         }
@@ -205,14 +249,14 @@ class LastStepController extends RepeatLoansController
         ProjectContractNumber::updateOrCreate(['orderId' => $order->id, 'userId' => $userId], ['uid' => $new_number]);
 
         $contractData = [
-            'number'             => $new_number,
-            'amount'             => $order->amount,
-            'period'             => $orderPeriod,
-            'base_percent'       => $percents,
-            'status'             => 12,
-            'loan_body_summ'     => $order->amount,
+            'number' => $new_number,
+            'amount' => $order->amount,
+            'period' => $orderPeriod,
+            'base_percent' => $percents,
+            'status' => 12,
+            'loan_body_summ' => $order->amount,
             'loan_percents_summ' => 0,
-            'loan_peni_summ'     => 0
+            'loan_peni_summ' => 0
         ];
         $contract = Contracts::updateOrCreate(
             ['user_id' => $userId, 'order_id' => $order->id],
@@ -230,17 +274,7 @@ class LastStepController extends RepeatLoansController
 
         YaDiskCron::insert($cron);
 
-        $type = [
-            'INDIVIDUALNIE_USLOVIA_ONL',
-            'GRAFIK_OBSL_MKR',
-            'PERECHISLENIE_ZAEMN_SREDSTV',
-            'ZAYAVLENIE_ZP_V_SCHET_POGASHENIYA_MKR',
-            'OBSHIE_USLOVIYA'
-        ];
-
-        $order = Orders::getUnfinished($userId);
-
-        $docs = Documents::getEndRegDocuments($order->id, $type);
+        $docs = Documents::where('order_id', $order->id);
         $res = [];
 
         foreach ($docs as $key => $doc) {
