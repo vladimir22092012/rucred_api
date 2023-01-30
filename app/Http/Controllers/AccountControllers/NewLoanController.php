@@ -9,7 +9,11 @@ class NewLoanController extends AccountController
 {
     public function checkAvailable()
     {
-        $unfinishedOrder = Orders::getUnfinished(self::$userId);
+        $unfinishedOrder = Orders::where('user_id', self::$userId)
+            ->where('is_archived', 0)
+            ->where('unreability', 0)
+            ->whereIn('status', [0,1,2,4,10,13,14])
+            ->first();
 
         if(!empty($unfinishedOrder))
             $canSendNew = 0;

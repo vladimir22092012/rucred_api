@@ -11,6 +11,7 @@ use App\Models\Ticket;
 use App\Models\TicketsMessages;
 use App\Models\Users;
 use App\Models\UsersTokens;
+use App\Models\YaDiskCron;
 use Illuminate\Http\Request;
 use App\Models\SmsMessages as SmsDB;
 use Illuminate\Support\Facades\Cookie;
@@ -141,7 +142,7 @@ class Sms
 
             Documents::where('order_id', $order->id)->delete();
 
-            $aspCode->update('order_id', $order->id);
+            $aspCode->update(['order_id' => $order->id]);
 
             Documents::createDocsForRegistration($userId, $order->id);
             Documents::createDocsAfterRegistrarion($userId, $order->id);
@@ -183,6 +184,15 @@ class Sms
                 'is_complited' => 0
             ];
             NotificationCron::insert($cron);
+
+            $cron =
+                [
+                    'order_id' => $order->id,
+                    'pak' => 'first_pak',
+                    'online' => 1
+                ];
+
+            YaDiskCron::insert($cron);
 
             return response($newToken, 200);
         } else

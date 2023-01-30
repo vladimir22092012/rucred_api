@@ -11,6 +11,7 @@ use App\Models\Documents;
 use App\Models\GroupsLoantypes;
 use App\Models\Loantypes;
 use App\Models\Orders;
+use App\Models\OrganisationSettlement;
 use App\Models\PaymentsSchedules;
 use App\Models\ProjectContractNumber;
 use App\Models\Scoring;
@@ -105,6 +106,7 @@ class LastStepController extends StepsController
         $card = Cards::getDefault($userId);
 
         $orderData = [
+            'probably_start_date'   => $start_date->format('Y-m-d H:i:s'),
             'probably_return_date'  => $end_date->format('Y-m-d H:i:s'),
             'probably_return_sum'   => $probably_return_sum,
             'period'                => $orderPeriod,
@@ -185,10 +187,6 @@ class LastStepController extends StepsController
 
         Documents::where('order_id', $order->id)->delete();
 
-        Documents::createDocsForRegistration($userId);
-        Documents::createDocsAfterRegistrarion($userId, $order->id);
-        Documents::createDocsEndRegistrarion($userId, $order->id);
-
         //Создание контракта
         $number = $order->uid;
         $number = explode(' ', $number);
@@ -221,14 +219,55 @@ class LastStepController extends StepsController
 
         Orders::where('id', $order->id)->update(['contract_id' => $contract->id]);
 
-        $cron =
-            [
-                'order_id' => $order->id,
-                'pak' => 'first_pak',
-                'online' => 1
+        $types = array(
+            'SOGLASIE_NA_KRED_OTCHET',
+            'SOGLASIE_NA_OBR_PERS_DANNIH',
+            'SOGLASIE_RABOTODATEL',
+            'SOGLASIE_RUKRED_RABOTODATEL',
+            'ZAYAVLENIE_NA_PERECHISL_CHASTI_ZP',
+            'ZAYAVLENIE_ZP_V_SCHET_POGASHENIYA_MKR',
+            'INDIVIDUALNIE_USLOVIA_ONL',
+            'GRAFIK_OBSL_MKR',
+            'PERECHISLENIE_ZAEMN_SREDSTV',
+            'OBSHIE_USLOVIYA'
+        );
+
+        $defaultSettlement = OrganisationSettlement::getDefault();
+
+        if ($defaultSettlement->id == 2)
+            $types[] = 'SOGLASIE_MINB';
+        else
+            $types[] = 'SOGLASIE_RDB';
+
+        foreach ($types as $type) {
+            $params = $order->toArray();
+            $arrUser = $user->toArray();
+
+            foreach ($arrUser as $key => $value) {
+                if ($key == 'email') {
+                    continue;
+                }
+                $params[$key] = $value;
+            }
+
+            $params['payment_schedule'] = PaymentsSchedules::where('order_id', $order->id)->where('actual', 1)->first()->toArray();
+
+            $data = [
+                'contract_id'    => $order->contract_id,
+                'name'           => Documents::$names[$type],
+                'template'       => Documents::$templates[$type],
+                'client_visible' => Documents::$client_visible[$type],
+                'params'         => serialize((object)$params),
+                'created'        => date('Y-m-d H:i:s'),
+                'numeration'     => Documents::$numeration[$type],
+                'hash'           => sha1(rand(11111, 99999))
             ];
 
-        YaDiskCron::insert($cron);
+            Documents::updateOrCreate(
+                ['user_id' => $user->id, 'order_id' => $order->id, 'type' => $type],
+                $data
+            );
+        }
 
         $type = [
             'INDIVIDUALNIE_USLOVIA_ONL',
@@ -237,8 +276,6 @@ class LastStepController extends StepsController
             'ZAYAVLENIE_ZP_V_SCHET_POGASHENIYA_MKR',
             'OBSHIE_USLOVIYA'
         ];
-
-        $order = Orders::getUnfinished($userId);
 
         $docs = Documents::getEndRegDocuments($order->id, $type);
         $res = [];
