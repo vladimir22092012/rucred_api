@@ -268,7 +268,7 @@ class LastStepController extends RepeatLoansController
         }
 
         $docs = Documents::where('order_id', $order->id)->get()->toArray();
-        //$res = [];
+        $res = [];
 
         $sort =
             [
