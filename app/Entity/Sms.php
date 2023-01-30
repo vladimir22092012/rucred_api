@@ -33,9 +33,9 @@ class Sms
 
         $phone = self::clear_phone($phone);
 
-        $userId = Users::where('phone_mobile', $phone)->first();
+        $user = Users::where('phone_mobile', $phone)->first();
 
-        if (empty($userId) && $step == 'auth')
+        if (empty($user) && $step == 'auth')
             return response('Такого клиента нет', 404);
 
 
@@ -46,8 +46,7 @@ class Sms
         if ($step == 'reg-doc') {
             $message = "Ваш код для подписания документов на сайте Рестарт.Онлайн:  $code";
 
-            if (!empty($userId)) {
-                $user = Users::find($userId);
+            if (!empty($user)) {
 
                 $sendTo = $user->email;
                 $title = 'RuCred | Ваш код для подписания ';
