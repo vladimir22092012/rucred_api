@@ -21,8 +21,7 @@ class Loans extends Account
             $type = 'Заявка';
             $orderNumber = $order->uid;
 
-            if($order->contract_id && $contract->status >= 2)
-            {
+            if ($order->contract_id && $contract->status >= 2) {
                 $type = 'Микрозайм';
                 $orderNumber = $contract->number;
             }
@@ -31,15 +30,15 @@ class Loans extends Account
             $tariff = $tariff->name;
 
             $res[$key] = [
-                'orderId'     => $order->id,
-                'number'      => $orderNumber,
-                'tariff'      => $tariff,
-                'amount'      => $order->amount,
-                'start_date'  => $order->probably_start_date,
+                'orderId' => $order->id,
+                'number' => $orderNumber,
+                'tariff' => $tariff,
+                'amount' => $order->amount,
+                'start_date' => ($type == 'Заявка') ? $order->probably_start_date : $contract->inssuance_date,
                 'return_date' => $order->probably_return_date,
-                'type'        => $type,
-                'date'        => $order->date,
-                'status'      => $order->status,
+                'type' => $type,
+                'date' => $order->date,
+                'status' => $order->status,
                 'is_archived' => $order->is_archived,
                 'unreability' => $order->unreability
             ];
