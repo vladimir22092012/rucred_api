@@ -37,7 +37,8 @@ class MainController extends RepeatLoansController
             'stage_registration' => 1,
             'firstname' => $firstname,
             'lastname' => $lastname,
-            'patronymic' => $patronymic
+            'patronymic' => $patronymic,
+            'passport_changed' => $needCorrectPassport
         ];
 
         Users::where('id', self::$userId)->update($userData);
