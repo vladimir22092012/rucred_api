@@ -289,8 +289,6 @@ class LastStepController extends RepeatLoansController
         $sort[] = '04.12';
         $sort[] = '04.10';
 
-        array_multisort($docs, $sort);
-
         foreach ($docs as $key => $doc) {
             foreach ($sort as $k => $number) {
                 if ($doc->numeration == $number) {
