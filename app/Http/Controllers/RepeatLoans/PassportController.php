@@ -56,7 +56,7 @@ class PassportController extends RepeatLoansController
         $oldPassportSerial = $user->passport_serial;
 
         if($user->passport_changed == 1 && $oldPassportSerial == $new_passport_serial)
-            return response('Необходимо заменить паспорт', 406);
+            return response('Необходимо заменить паспорт', 407);
 
         Addresses::where('id', $user->regaddress_id)->update(['adressfull' => $regadressfull]);
         Addresses::where('id', $user->faktaddress_id)->update(['adressfull' => $faktadressfull]);
