@@ -251,14 +251,14 @@ class LastStepController extends RepeatLoansController
             $params['payment_schedule'] = PaymentsSchedules::where('order_id', $order->id)->where('actual', 1)->first()->toArray();
 
             $data = [
-                'contract_id'    => $order->contract_id,
-                'name'           => Documents::$names[$type],
-                'template'       => Documents::$templates[$type],
+                'contract_id' => $order->contract_id,
+                'name' => Documents::$names[$type],
+                'template' => Documents::$templates[$type],
                 'client_visible' => Documents::$client_visible[$type],
-                'params'         => serialize((object)$params),
-                'created'        => date('Y-m-d H:i:s'),
-                'numeration'     => Documents::$numeration[$type],
-                'hash'           => sha1(rand(11111, 99999))
+                'params' => serialize((object)$params),
+                'created' => date('Y-m-d H:i:s'),
+                'numeration' => Documents::$numeration[$type],
+                'hash' => sha1(rand(11111, 99999))
             ];
 
             Documents::updateOrCreate(
@@ -267,14 +267,39 @@ class LastStepController extends RepeatLoansController
             );
         }
 
-        $docs = Documents::where('order_id', $order->id)->get();
-        $res = [];
+        $docs = Documents::where('order_id', $order->id)->get()->toArray();
+        //$res = [];
+
+        $sort =
+            [
+                '04.05',
+                '04.06',
+                '03.03',
+            ];
+
+        if ($order->settlement_id == 2)
+            $sort[] = '04.05.1';
+        else
+            $sort[] = '04.05.2';
+
+        $sort[] = '04.07';
+        $sort[] = '04.09';
+        $sort[] = '04.03.01';
+        $sort[] = '03.04';
+        $sort[] = '04.12';
+        $sort[] = '04.10';
+
+        array_multisort($docs, $sort);
 
         foreach ($docs as $key => $doc) {
-            $res[$key] = [
-                'name' => $doc->name,
-                'link' => env('URL_CRM') . 'online_docs?id=' . $doc->hash
-            ];
+            foreach ($sort as $k => $number) {
+                if ($doc->numeration == $number) {
+                    $res[$k] = [
+                        'name' => $doc['name'],
+                        'link' => env('URL_CRM') . 'online_docs?id=' . $doc['hash']
+                    ];
+                }
+            }
         }
 
         return response($res, 200);
