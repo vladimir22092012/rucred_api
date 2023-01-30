@@ -64,6 +64,14 @@ class MainController extends StepsController
         $number = Users::getLastPersonalNumber();
         $number++;
 
+        //Проверка на 6 знаков персонального номера
+        $number = str_split($number);
+
+        if(count($number) > 6)
+            $number = Users::getFreePersonalNumber();
+        else
+            $number = implode($number);
+
         $userData = [
             'firstname' => $firstname,
             'lastname' => $lastname,
