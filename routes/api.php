@@ -33,6 +33,7 @@ use App\Http\Controllers\RepeatLoans\PassportController as RepeatPassport;
 use App\Http\Controllers\RepeatLoans\RequisitesController as RepeatRequisites;
 use App\Http\Controllers\RepeatLoans\WorkController;
 use App\Http\Controllers\AccountControllers\NewLoanController;
+use App\Http\Controllers\RepeatLoans\MainController as RepeatMain;
 
 /*
 |--------------------------------------------------------------------------
@@ -81,6 +82,7 @@ Route::middleware([TokenCheck::class])->group(function () {
 
     //Route::post('/lk/loan/repeat/create', [PopUpController::class, 'action']);
 
+    Route::post('/lk/loan/repeat/main', [RepeatMain::class, 'action']);
     Route::post('/lk/loan/repeat/passport', [RepeatPassport::class, 'action']);
     Route::post('/lk/loan/repeat/work', [WorkController::class, 'action']);
     Route::post('/lk/loan/repeat/settings', [LoanSettingsController::class, 'action']);

@@ -31,7 +31,7 @@ class PassportController extends RepeatLoansController
 
         $passport_serial = $request['passport_serial'];
         $passport_number = $request['passport_number'];
-        $passport_serial = "$passport_serial $passport_number";
+        $new_passport_serial = "$passport_serial $passport_number";
         $passport_date = $request['passport_date'];
         $passport_issued = $request['passport_issued'];
         $subdivision_code = $request['subdivision_code'];
@@ -45,22 +45,29 @@ class PassportController extends RepeatLoansController
         }
 
         //Проверка на дубликат
-        $checkPassport = Users::checkPassport($passport_serial);
+        $checkPassport = Users::checkPassport($new_passport_serial);
 
         if ($checkPassport && ($checkPassport->id != self::$userId)) {
             $msg = 'Данный паспорт уже использовался при регистрации';
             return response($msg, 406);
         }
 
+        //Проверка пасспорта на его смену
+        $oldPassportSerial = $user->passport_serial;
+
+        if($user->passport_changed == 1 && $oldPassportSerial == $new_passport_serial)
+            return response('Необходимо заменить паспорт', 406);
+
         Addresses::where('id', $user->regaddress_id)->update(['adressfull' => $regadressfull]);
         Addresses::where('id', $user->faktaddress_id)->update(['adressfull' => $faktadressfull]);
 
         $userData = [
             'stage_registration' => 2,
-            'passport_serial' => $passport_serial,
+            'passport_serial' => $new_passport_serial,
             'passport_date' => $passport_date,
             'passport_issued' => $passport_issued,
             'subdivision_code' => $subdivision_code,
+            'passport_changed' => 0
         ];
 
         Users::where('id', self::$userId)->update($userData);
