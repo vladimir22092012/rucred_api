@@ -34,6 +34,19 @@ class Users extends Model
         return $number;
     }
 
+    public static function getFreePersonalNumber()
+    {
+        $number = rand(0, 999999);
+        $number = str_pad($number, 6, '0', STR_PAD_LEFT);
+
+        $isExist = self::where('personal_number', $number)->first();
+
+        if(!empty($isExist))
+            self::getFreePersonalNumber();
+        else
+            return $number;
+    }
+
     public static function checkPassport($passport_serial)
     {
 
