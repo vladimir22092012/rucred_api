@@ -3,6 +3,8 @@
 namespace App\Tools;
 
 
+use App\Models\Orders;
+
 class PaymentSchedule extends Tools
 {
     static function processing($method, $data)
@@ -19,6 +21,7 @@ class PaymentSchedule extends Tools
         $percent = $data['percent'];      //параметр тарифа с учетом профсоюза
         $free_period = $data['free_period'];  //параметр тарифа
         $min_period = $data['min_period'];   //параметр тарифа
+        $orderId = $data['order_id'];
 
         $percent_per_month = (($percent / 100) * 360) / 12;
 
@@ -104,6 +107,8 @@ class PaymentSchedule extends Tools
                         'rest_pay' => $rest_sum
                     ];
 
+                Orders::where('id', $orderId)->update(['probably_return_date' => date('Y-m-d H:i:s', strtotime($date->format('d.m.Y')))]);
+
                 $paydate->add(new \DateInterval('P1M'));
             }
         }
@@ -139,6 +144,7 @@ class PaymentSchedule extends Tools
         $free_period = $data['free_period'];  //параметр тарифа
         $min_period = $data['min_period'];   //параметр тарифа
         $period = $data['period'];   //параметр тарифа
+        $orderId = $data['order_id'];
 
         $percent_per_month = (($percent / 100) * 365) / 12;
 
@@ -230,6 +236,8 @@ class PaymentSchedule extends Tools
                         'comission_pay' => 0.00,
                         'rest_pay' => $rest_sum
                     ];
+
+                Orders::where('id', $orderId)->update(['probably_return_date' => date('Y-m-d H:i:s', strtotime($date->format('d.m.Y')))]);
 
                 $paydate->add(new \DateInterval('P1M'));
             }

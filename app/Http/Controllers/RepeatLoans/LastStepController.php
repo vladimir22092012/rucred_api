@@ -55,12 +55,6 @@ class LastStepController extends RepeatLoansController
             $first_pay->add(new \DateInterval('P1M'));
         }
 
-        $first_pay = Utils::processing('check_pay_date', $first_pay);
-
-        if (date_diff($first_pay, $start_date)->days <= $tariff->min_period && $first_pay->format('m') != $start_date->format('m')) {
-            $end_date->add(new \DateInterval('P1M'));
-        }
-
         for ($i = 0; $i <= 15; $i++) {
             $check_date = WeekendCalendar::checkDate($end_date->format('Y-m-d'));
 
@@ -83,13 +77,14 @@ class LastStepController extends RepeatLoansController
 
         $data = [
             'amount' => $amount,
-            'start_date' => $order->probably_start_date,
+            'start_date' => $start_date->format('Y-m-d H:i:s'),
             'end_date' => $end_date->format('Y-m-d H:i:s'),
             'first_pay_day' => $first_pay_day,
             'percent' => $percents,
             'free_period' => $tariff->free_period,
             'min_period' => $tariff->min_period,
-            'period' => $period
+            'period' => $period,
+            'order_id' => $order->id
         ];
 
         if ($tariff->type == 'pdl') {
@@ -106,7 +101,6 @@ class LastStepController extends RepeatLoansController
         $card = Cards::getDefault($userId);
 
         $orderData = [
-            'probably_return_date' => $end_date->format('Y-m-d H:i:s'),
             'probably_return_sum' => $probably_return_sum,
             'period' => $orderPeriod,
             'percent' => $percents,
@@ -158,7 +152,6 @@ class LastStepController extends RepeatLoansController
 
         $userData = [
             'profunion' => $profunion,
-            'stage_registration' => 8,
             'pdn' => $pdn
         ];
 
@@ -291,7 +284,7 @@ class LastStepController extends RepeatLoansController
 
         foreach ($docs as $key => $doc) {
             foreach ($sort as $k => $number) {
-                if ($doc->numeration == $number) {
+                if ($doc['numeration'] == $number) {
                     $res[$k] = [
                         'name' => $doc['name'],
                         'link' => env('URL_CRM') . 'online_docs?id=' . $doc['hash']

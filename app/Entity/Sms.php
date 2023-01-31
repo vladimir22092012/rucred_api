@@ -143,6 +143,8 @@ class Sms
 
             $aspCode->update(['order_id' => $order->id]);
 
+            Users::where('id', $user->id)->update(['stage_registration' => 8]);
+
             Documents::createDocsForRegistration($userId, $order->id);
             Documents::createDocsAfterRegistrarion($userId, $order->id);
             Documents::createDocsEndRegistrarion($userId, $order->id);

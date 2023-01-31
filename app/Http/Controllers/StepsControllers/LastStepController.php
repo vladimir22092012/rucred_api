@@ -57,12 +57,6 @@ class LastStepController extends StepsController
             $first_pay->add(new \DateInterval('P1M'));
         }
 
-        $first_pay = Utils::processing('check_pay_date', $first_pay);
-
-        if (date_diff($first_pay, $start_date)->days <= $tariff->min_period && $first_pay->format('m') != $start_date->format('m')) {
-            $end_date->add(new \DateInterval('P1M'));
-        }
-
         for ($i = 0; $i <= 15; $i++) {
             $check_date = WeekendCalendar::checkDate($end_date->format('Y-m-d'));
 
@@ -91,7 +85,8 @@ class LastStepController extends StepsController
             'percent'       => $percents,
             'free_period'   => $tariff->free_period,
             'min_period'    => $tariff->min_period,
-            'period'        => $period
+            'period'        => $period,
+            'order_id'      => $order->id
         ];
 
         if ($tariff->type == 'pdl') {
@@ -108,8 +103,6 @@ class LastStepController extends StepsController
         $card = Cards::getDefault($userId);
 
         $orderData = [
-            'probably_start_date'   => $start_date->format('Y-m-d H:i:s'),
-            'probably_return_date'  => $end_date->format('Y-m-d H:i:s'),
             'probably_return_sum'   => $probably_return_sum,
             'period'                => $orderPeriod,
             'percent'               => $percents,
@@ -162,7 +155,6 @@ class LastStepController extends StepsController
 
         $userData = [
             'profunion'          => $profunion,
-            'stage_registration' => 8,
             'pdn'                => $pdn
         ];
 
@@ -242,8 +234,11 @@ class LastStepController extends StepsController
             $types[] = 'SOGLASIE_RDB';
 
         foreach ($types as $type) {
-            $params = $order->toArray();
-            $arrUser = $user->toArray();
+            $params = Orders::getUnfinished(self::$userId);
+            $params = $params->toArray();
+
+            $arrUser = Users::find(self::$userId);
+            $arrUser = $arrUser->toArray();
 
             foreach ($arrUser as $key => $value) {
                 if ($key == 'email') {

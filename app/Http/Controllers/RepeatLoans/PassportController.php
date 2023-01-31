@@ -48,7 +48,7 @@ class PassportController extends RepeatLoansController
         $checkPassport = Users::checkPassport($new_passport_serial);
 
         if ($checkPassport && ($checkPassport->id != self::$userId)) {
-            $msg = 'Данный паспорт уже использовался при регистрации';
+            $msg = ['alreadyUsed' => 'Данный паспорт уже использовался при регистрации'];
             return response($msg, 406);
         }
 
@@ -56,7 +56,7 @@ class PassportController extends RepeatLoansController
         $oldPassportSerial = $user->passport_serial;
 
         if($user->passport_changed == 1 && $oldPassportSerial == $new_passport_serial)
-            return response('Необходимо заменить паспорт', 407);
+            return response(['needChangePassport' => 'Необходимо заменить паспорт'], 406);
 
         Addresses::where('id', $user->regaddress_id)->update(['adressfull' => $regadressfull]);
         Addresses::where('id', $user->faktaddress_id)->update(['adressfull' => $faktadressfull]);
