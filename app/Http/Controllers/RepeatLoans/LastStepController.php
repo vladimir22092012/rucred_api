@@ -279,7 +279,8 @@ class LastStepController extends RepeatLoansController
 
         $sort[] = '04.07';
         $sort[] = '04.09';
-        $sort[] = '04.03.01';
+        $sort[] = '04.03.1';
+        $sort[] = '04.04';
         $sort[] = '03.04';
         $sort[] = '04.12';
         $sort[] = '04.10';
