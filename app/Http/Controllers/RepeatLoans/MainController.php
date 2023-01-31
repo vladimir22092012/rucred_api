@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\RepeatLoans;
 
+use App\Models\Orders;
 use App\Models\Users;
 use Illuminate\Http\Request;
 
@@ -41,6 +42,11 @@ class MainController extends RepeatLoansController
         ];
 
         Users::where('id', self::$userId)->update($userData);
+
+        Orders::where('user_id', self::$userId)
+            ->where('status', 12)
+            ->where('is_archived', 0)
+            ->delete();
 
         return response($needCorrectPassport, 200);
     }
