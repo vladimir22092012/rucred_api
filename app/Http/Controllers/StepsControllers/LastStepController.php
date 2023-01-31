@@ -45,7 +45,45 @@ class LastStepController extends StepsController
 
         $tariff = Loantypes::find($tariff_id);
 
-        $start_date = date('Y-m-d', strtotime($start_date));
+        $defaultSettlement = OrganisationSettlement::getDefault();
+
+        $timeOfTransitionToNextBankingDay = date(
+            'H:i',
+            strtotime(Setting::whereName('time_of_transition_to_the_next_banking_day')->first()->value)
+        );
+
+        $start_date = date('Y-m-d');
+
+        if ($defaultSettlement->id == 3 && date('H:i') >= $timeOfTransitionToNextBankingDay) {
+            $start_date = date('Y-m-d', strtotime('+1 days'));
+        }
+
+        if ($defaultSettlement->id == 2) {
+            if (date('H:i') >= $timeOfTransitionToNextBankingDay) {
+                $start_date = date('Y-m-d', strtotime('+2 days'));
+            } else {
+                $start_date = date('Y-m-d', strtotime('+1 days'));
+            }
+        }
+
+        $check_date = WeekendCalendar::checkDate($start_date);
+
+        if (!empty($check_date)) {
+            for ($i = 0; $i <= 15; $i++) {
+                $check_date = WeekendCalendar::checkDate($start_date);
+
+                if (empty($check_date)) {
+                    if ($defaultSettlement->id == 2) {
+                        if (date('H:i') >= $timeOfTransitionToNextBankingDay)
+                            $start_date = date('Y-m-d', strtotime($start_date . '+1 days'));
+                    }
+                    break;
+                } else {
+                    $start_date = date('Y-m-d', strtotime($start_date . '+1 days'));
+                }
+            }
+        }
+
         $first_pay  = new \DateTime(date('Y-m-' . $first_pay_day, strtotime($start_date)));
         $end_date   = date('Y-m-' . $first_pay_day, strtotime($start_date . '+' . $tariff->max_period . 'month'));
 
@@ -226,45 +264,6 @@ class LastStepController extends StepsController
             'PERECHISLENIE_ZAEMN_SREDSTV',
             'OBSHIE_USLOVIYA'
         );
-
-        $defaultSettlement = OrganisationSettlement::getDefault();
-
-        $timeOfTransitionToNextBankingDay = date(
-            'H:i',
-            strtotime(Setting::whereName('time_of_transition_to_the_next_banking_day')->first()->value)
-        );
-
-        $start_date = date('Y-m-d');
-
-        if ($defaultSettlement->id == 3 && date('H:i') >= $timeOfTransitionToNextBankingDay) {
-            $start_date = date('Y-m-d', strtotime('+1 days'));
-        }
-
-        if ($defaultSettlement->id == 2) {
-            if (date('H:i') >= $timeOfTransitionToNextBankingDay) {
-                $start_date = date('Y-m-d', strtotime('+2 days'));
-            } else {
-                $start_date = date('Y-m-d', strtotime('+1 days'));
-            }
-        }
-
-        $check_date = WeekendCalendar::checkDate($start_date);
-
-        if (!empty($check_date)) {
-            for ($i = 0; $i <= 15; $i++) {
-                $check_date = WeekendCalendar::checkDate($start_date);
-
-                if (empty($check_date)) {
-                    if ($defaultSettlement->id == 2) {
-                        if (date('H:i') >= $timeOfTransitionToNextBankingDay)
-                            $start_date = date('Y-m-d', strtotime($start_date . '+1 days'));
-                    }
-                    break;
-                } else {
-                    $start_date = date('Y-m-d', strtotime($start_date . '+1 days'));
-                }
-            }
-        }
 
         Orders::where('id', $order->id)->update(['probably_start_date' => $start_date]);
 
