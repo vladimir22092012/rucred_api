@@ -158,7 +158,6 @@ class LastStepController extends RepeatLoansController
 
         $userData = [
             'profunion' => $profunion,
-            'stage_registration' => 8,
             'pdn' => $pdn
         ];
 

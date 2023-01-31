@@ -65,8 +65,6 @@ class LoanSettingsController extends RepeatLoansController
 
         Orders::updateOrCreate(['user_id' => self::$userId, 'status' => 12, 'is_archived' => 0], $orderData);
 
-        Users::where('id', self::$userId)->update(['stage_registration' => 4]);
-
         return response('success', 200);
     }
 }
