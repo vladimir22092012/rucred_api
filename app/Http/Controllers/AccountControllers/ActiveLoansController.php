@@ -152,7 +152,7 @@ class ActiveLoansController extends AccountController
                 'number' => $orderNumber,
                 'type' => $type,
                 'amount' => $order->amount,
-                'probably_start_date' => date('d.m.Y', strtotime($order->probably_start_date)),
+                'probably_start_date' => date('d.m.Y', strtotime($order->begin_registration)),
                 'probably_return_date' => date('d.m.Y', strtotime($order->probably_return_date)),
                 'loantype_name' => $loanType->name,
                 'status' => $order->status,
