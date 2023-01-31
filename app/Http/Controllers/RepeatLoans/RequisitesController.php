@@ -62,8 +62,6 @@ class RequisitesController extends RepeatLoansController
 
         BankRequisite::insert($bankData);
 
-        Users::where('id', $userId)->update(['stage_registration' => 5]);
-
         $default_settlement = OrganisationSettlement::getDefault();
         $timeOfTransitionToNextBankingDay = date(
             'H:i',
@@ -146,8 +144,6 @@ class RequisitesController extends RepeatLoansController
         ];
 
         Cards::insert($cardData);
-
-        Users::where('id', $userId)->update(['stage_registration' => 5]);
 
         return response('success', 200);
     }

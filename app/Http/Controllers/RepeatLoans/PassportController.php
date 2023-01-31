@@ -62,7 +62,6 @@ class PassportController extends RepeatLoansController
         Addresses::where('id', $user->faktaddress_id)->update(['adressfull' => $faktadressfull]);
 
         $userData = [
-            'stage_registration' => 2,
             'passport_serial' => $new_passport_serial,
             'passport_date' => $passport_date,
             'passport_issued' => $passport_issued,

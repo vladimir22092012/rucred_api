@@ -43,8 +43,7 @@ class WorkController extends RepeatLoansController
             'group_id'           => $group_id,
             'company_id'         => $company_id,
             'branche_id'         => $branch_id,
-            'profunion'          => $profunion,
-            'stage_registration' => 3
+            'profunion'          => $profunion
         ];
 
         Users::where('id', $userId)->update($userData);
