@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\UsersTokens;
 use Illuminate\Http\Request;
 
+date_default_timezone_set('Europe/Moscow');
+
 class StepsController extends Controller
 {
     protected static $userId;

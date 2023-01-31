@@ -38,14 +38,51 @@ class LastStepController extends RepeatLoansController
         $branch = Branch::find($branch_id);
 
         $first_pay_day = $branch->payday;
-        $start_date = $order->probably_start_date;
         $amount = $order->amount;
         $tariff_id = $order->loan_type;
         $group_id = $order->group_id;
 
         $tariff = Loantypes::find($tariff_id);
 
-        $start_date = date('Y-m-d', strtotime($start_date));
+        $defaultSettlement = OrganisationSettlement::getDefault();
+
+        $timeOfTransitionToNextBankingDay = date(
+            'H:i',
+            strtotime(Setting::whereName('time_of_transition_to_the_next_banking_day')->first()->value)
+        );
+
+        $start_date = date('Y-m-d');
+
+        if ($defaultSettlement->id == 3 && date('H:i') >= $timeOfTransitionToNextBankingDay) {
+            $start_date = date('Y-m-d', strtotime('+1 days'));
+        }
+
+        if ($defaultSettlement->id == 2) {
+            if (date('H:i') >= $timeOfTransitionToNextBankingDay) {
+                $start_date = date('Y-m-d', strtotime('+2 days'));
+            } else {
+                $start_date = date('Y-m-d', strtotime('+1 days'));
+            }
+        }
+
+        $check_date = WeekendCalendar::checkDate($start_date);
+
+        if (!empty($check_date)) {
+            for ($i = 0; $i <= 15; $i++) {
+                $check_date = WeekendCalendar::checkDate($start_date);
+
+                if (empty($check_date)) {
+                    if ($defaultSettlement->id == 2) {
+                        if (date('H:i') >= $timeOfTransitionToNextBankingDay)
+                            $start_date = date('Y-m-d', strtotime($start_date . '+1 days'));
+                    }
+                    break;
+                } else {
+                    $start_date = date('Y-m-d', strtotime($start_date . '+1 days'));
+                }
+            }
+        }
+
         $first_pay = new \DateTime(date('Y-m-' . $first_pay_day, strtotime($start_date)));
         $end_date = date('Y-m-' . $first_pay_day, strtotime($start_date . '+' . $tariff->max_period . 'month'));
 
@@ -79,6 +116,7 @@ class LastStepController extends RepeatLoansController
         }
 
         $data = [
+            'start_date' => $start_date->format('Y-m-d H:i:s'),
             'amount' => $amount,
             'end_date' => $end_date->format('Y-m-d H:i:s'),
             'first_pay_day' => $first_pay_day,
@@ -225,45 +263,6 @@ class LastStepController extends RepeatLoansController
             'OBSHIE_USLOVIYA'
         );
 
-        $defaultSettlement = OrganisationSettlement::getDefault();
-
-        $timeOfTransitionToNextBankingDay = date(
-            'H:i',
-            strtotime(Setting::whereName('time_of_transition_to_the_next_banking_day')->first()->value)
-        );
-
-        $start_date = date('Y-m-d');
-
-        if ($defaultSettlement->id == 3 && date('H:i') >= $timeOfTransitionToNextBankingDay) {
-            $start_date = date('Y-m-d', strtotime('+1 days'));
-        }
-
-        if ($defaultSettlement->id == 2) {
-            if (date('H:i') >= $timeOfTransitionToNextBankingDay) {
-                $start_date = date('Y-m-d', strtotime('+2 days'));
-            } else {
-                $start_date = date('Y-m-d', strtotime('+1 days'));
-            }
-        }
-
-        $check_date = WeekendCalendar::checkDate($start_date);
-
-        if (!empty($check_date)) {
-            for ($i = 0; $i <= 15; $i++) {
-                $check_date = WeekendCalendar::checkDate($start_date);
-
-                if (empty($check_date)) {
-                    if ($defaultSettlement->id == 2) {
-                        if (date('H:i') >= $timeOfTransitionToNextBankingDay)
-                            $start_date = date('Y-m-d', strtotime($start_date . '+1 days'));
-                    }
-                    break;
-                } else {
-                    $start_date = date('Y-m-d', strtotime($start_date . '+1 days'));
-                }
-            }
-        }
-
         Orders::where('id', $order->id)->update(['probably_start_date' => $start_date]);
 
         if ($defaultSettlement->id == 2)
@@ -285,7 +284,7 @@ class LastStepController extends RepeatLoansController
             $params['payment_schedule'] = PaymentsSchedules::where('order_id', $order->id)->where('actual', 1)->first()->toArray();
 
             $data = [
-                'contract_id' => $order->contract_id,
+                'contract_id' => $contract->id,
                 'name' => Documents::$names[$type],
                 'template' => Documents::$templates[$type],
                 'client_visible' => Documents::$client_visible[$type],

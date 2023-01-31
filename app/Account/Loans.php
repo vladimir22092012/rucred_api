@@ -34,7 +34,7 @@ class Loans extends Account
                 'number' => $orderNumber,
                 'tariff' => $tariff,
                 'amount' => $order->amount,
-                'start_date' => ($type == 'Заявка') ? $order->probably_start_date : $contract->inssuance_date,
+                'start_date' => $order->begin_registration,
                 'return_date' => $order->probably_return_date,
                 'type' => $type,
                 'date' => $order->date,

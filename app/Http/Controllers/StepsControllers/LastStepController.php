@@ -79,6 +79,7 @@ class LastStepController extends StepsController
         }
 
         $data = [
+            'start_date' => $start_date->format('Y-m-d H:i:s'),
             'amount'        => $amount,
             'end_date'      => $end_date->format('Y-m-d H:i:s'),
             'first_pay_day' => $first_pay_day,
@@ -289,7 +290,7 @@ class LastStepController extends StepsController
             $params['payment_schedule'] = PaymentsSchedules::where('order_id', $order->id)->where('actual', 1)->first()->toArray();
 
             $data = [
-                'contract_id'    => $order->contract_id,
+                'contract_id'    => $contract->id,
                 'name'           => Documents::$names[$type],
                 'template'       => Documents::$templates[$type],
                 'client_visible' => Documents::$client_visible[$type],
