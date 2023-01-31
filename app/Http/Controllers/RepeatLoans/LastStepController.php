@@ -51,6 +51,8 @@ class LastStepController extends RepeatLoansController
         $start_date = new \DateTime($start_date);
         $end_date = new \DateTime($end_date);
 
+        $start_date = Utils::processing('check_pay_date', $start_date);
+
         if ($start_date > $first_pay) {
             $first_pay->add(new \DateInterval('P1M'));
         }
