@@ -80,7 +80,6 @@ class LastStepController extends StepsController
 
         $data = [
             'amount'        => $amount,
-            'start_date'    => $start_date->format('Y-m-d H:i:s'),
             'end_date'      => $end_date->format('Y-m-d H:i:s'),
             'first_pay_day' => $first_pay_day,
             'percent'       => $percents,
