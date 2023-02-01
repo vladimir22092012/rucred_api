@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\StepsControllers;
 
 use App\Models\Loantypes;
@@ -67,7 +68,7 @@ class MainController extends StepsController
         //Проверка на 6 знаков персонального номера
         $number = str_split($number);
 
-        if(count($number) > 6)
+        if (count($number) > 6)
             $number = Users::getFreePersonalNumber();
         else
             $number = implode($number);
@@ -86,7 +87,14 @@ class MainController extends StepsController
             'stage_registration' => 1
         ];
 
-        $userId = Users::insertGetId($userData);
+        $existUser = Users::where('phone_mobile', $phone)->first();
+
+        if (!empty($existUser)) {
+            $userId = $existUser->id;
+            Users::where('phone_mobile', $phone)->update($userData);
+        } else {
+            $userId = Users::insertGetId($userData);
+        }
 
         UsersTokens::where('token', $request->header('Authorization'))->update(['user_id' => $userId]);
 
