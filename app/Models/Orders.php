@@ -62,7 +62,7 @@ class Orders extends Model
     {
         $order = self::where('user_id', $userId)
             ->where('status', 12)
-            ->where('is_archived', 0)
+            ->where('unreability', 0)
             ->orderBy('id', 'desc')
             ->first();
 

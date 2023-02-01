@@ -51,4 +51,19 @@ class General extends Account
         $settlement = OrganisationSettlement::getDefault();
         return response($settlement->id, 200);
     }
+
+    public function getReabilityStatus()
+    {
+        $userId = self::$userId;
+        $orders = Orders::where('user_id', $userId)->get();
+
+        $unreability = 1;
+
+        foreach ($orders as $order) {
+            if ($order->unreability == 0)
+                $unreability = 0;
+        }
+
+        return response($unreability, 200);
+    }
 }

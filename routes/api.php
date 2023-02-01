@@ -65,6 +65,7 @@ Route::middleware([TokenCheck::class])->group(function () {
     Route::post('/lk/general/get_stage', [General::class, 'getStage']);
     Route::post('/lk/general/get_user', [General::class, 'getUser']);
     Route::post('/lk/general/get_default_settlement', [General::class, 'getDefaultSettlement']);
+    Route::post('/lk/general/get_reability_status', [General::class, 'getReabilityStatus']);
 
     Route::post('/lk/canSendNewLoan', [NewLoanController::class, 'checkAvailable']);
 
