@@ -158,7 +158,7 @@ class LastStepController extends StepsController
         $dates = [];
         $payments = [];
 
-        $dates[0] = date('d.m.Y', strtotime($order->probably_start_date));
+        $dates[0] = date('d.m.Y', strtotime($start_date->format('Y-m-d H:i:s')));
         $payments[0] = -$amount;
 
         foreach ($payment_schedule as $date => $pay) {
