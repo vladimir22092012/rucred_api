@@ -16,6 +16,8 @@ use Illuminate\Http\Request;
 use App\Models\SmsMessages as SmsDB;
 use Illuminate\Support\Facades\Cookie;
 
+date_default_timezone_set('Europe/Moscow');
+
 class Sms
 {
 
