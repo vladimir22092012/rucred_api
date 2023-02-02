@@ -57,7 +57,7 @@ class General extends Account
         $userId = self::$userId;
         $order = Orders::getUnfinished($userId);
 
-        if(!$order)
+        if(!empty($order))
             $unreability = 0;
         else
             $unreability = 1;
