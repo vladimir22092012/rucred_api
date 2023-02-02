@@ -55,7 +55,7 @@ class General extends Account
     public function getReabilityStatus()
     {
         $userId = self::$userId;
-        $orders = Orders::where('user_id', $userId)->get();
+        $orders = Orders::getUnfinished($userId);
 
         $unreability = 1;
 
