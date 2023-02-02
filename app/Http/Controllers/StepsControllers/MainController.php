@@ -91,6 +91,18 @@ class MainController extends StepsController
 
         if (!empty($existUser)) {
             $userId = $existUser->id;
+
+            $userData = [
+                'firstname' => $firstname,
+                'lastname' => $lastname,
+                'patronymic' => $patronymic,
+                'birth' => $birth,
+                'birth_place' => $birth_place,
+                'password' => '',
+                'phone_mobile' => $phone,
+                'stage_registration' => 1
+            ];
+
             Users::where('id', $existUser->id)->update($userData);
         } else {
             $userId = Users::insertGetId($userData);
