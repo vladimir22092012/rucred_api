@@ -91,7 +91,7 @@ class MainController extends StepsController
 
         if (!empty($existUser)) {
             $userId = $existUser->id;
-            Users::where('phone_mobile', $phone)->update($userData);
+            Users::where('id', $existUser->id)->update($userData);
         } else {
             $userId = Users::insertGetId($userData);
         }
