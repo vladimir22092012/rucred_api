@@ -55,16 +55,18 @@ class LastStepController extends StepsController
         $start_date = date('Y-m-d');
 
         if ($defaultSettlement->id == 3 && date('H:i') >= $timeOfTransitionToNextBankingDay) {
-            $start_date = date('Y-m-d', strtotime('+1 days'));
+            $start_date = date('Y-m-d', strtotime($start_date.'+1 days'));
         }
 
         if ($defaultSettlement->id == 2) {
             if (date('H:i') >= $timeOfTransitionToNextBankingDay) {
-                $start_date = date('Y-m-d', strtotime('+2 days'));
+                $start_date = date('Y-m-d', strtotime($start_date.'+2 days'));
             } else {
-                $start_date = date('Y-m-d', strtotime('+1 days'));
+                $start_date = date('Y-m-d', strtotime($start_date.'+1 days'));
             }
         }
+
+        $middleDate = date('Y-m-d', strtotime($start_date.'-1 days'));
 
         $check_date = WeekendCalendar::checkDate($start_date);
 
@@ -74,7 +76,10 @@ class LastStepController extends StepsController
 
                 if (empty($check_date)) {
                     if ($defaultSettlement->id == 2) {
-                        if (date('H:i') >= $timeOfTransitionToNextBankingDay)
+
+                        $middleDate = WeekendCalendar::checkDate($middleDate);
+
+                        if (date('H:i') >= $timeOfTransitionToNextBankingDay && !empty($middleDate))
                             $start_date = date('Y-m-d', strtotime($start_date . '+1 days'));
                     }
                     break;
