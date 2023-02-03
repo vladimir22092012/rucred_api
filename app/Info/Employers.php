@@ -62,6 +62,9 @@ class Employers extends Info
             foreach ($group_loantypes as $group_loantype) {
                 $loantype = Loantypes::where('id', $group_loantype->loantype_id)->first();
 
+                if($loantype->online_flag == 0)
+                    continue;
+
                 $actual_percents = GroupsLoantypes::getPercents($group_loantype->group_id, $group_loantype->loantype_id);
                 $loantype->percent = $actual_percents->standart_percents;
                 $loantype->profunion = $actual_percents->preferential_percents;
