@@ -188,15 +188,6 @@ class Sms
             ];
             NotificationCron::insert($cron);
 
-            $cron =
-                [
-                    'order_id' => $order->id,
-                    'pak' => 'first_pak',
-                    'online' => 1
-                ];
-
-            YaDiskCron::insert($cron);
-
             return response($newToken, 200);
         } else
             return response($newToken, 200);
