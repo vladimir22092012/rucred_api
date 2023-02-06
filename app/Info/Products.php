@@ -27,7 +27,7 @@ class Products extends Info
             }
 
             foreach ($tariffs as $key => $tariff) {
-                if ($tariff->online_flag == 0) {
+                if (in_array($tariff->online_flag, [0,2])) {
                     continue;
                 }
                 $data = [
@@ -48,7 +48,7 @@ class Products extends Info
         } else {
             $tariffs = Loantypes::all();
             foreach ($tariffs as $key => $tariff) {
-                if ($tariff->online_flag == 0) {
+                if (in_array($tariff->online_flag, [0,2])) {
                     continue;
                 }
                 $data = [
