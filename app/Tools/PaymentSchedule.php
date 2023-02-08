@@ -23,7 +23,7 @@ class PaymentSchedule extends Tools
         $min_period = $data['min_period'];   //параметр тарифа
         $orderId = $data['order_id'] ?? null;
 
-        $percent_per_month = (($percent / 100) * 360) / 12;
+        $percent_per_month = (($percent / 100) * 365) / 12;
 
         $period = 1;
 
@@ -77,6 +77,10 @@ class PaymentSchedule extends Tools
                 'comission_pay' => 0.00,
                 'rest_pay' => $rest_sum -= $body_pay
             ];
+
+        if(!empty($orderId))
+            Orders::where('id', $orderId)->update(['probably_return_date' => date('Y-m-d H:i:s', strtotime($paydate->format('d.m.Y')))]);
+
         $paydate->add(new \DateInterval('P1M'));
 
         $period -= $iteration;
@@ -202,6 +206,9 @@ class PaymentSchedule extends Tools
                 'comission_pay' => 0.00,
                 'rest_pay' => $rest_sum -= $body_pay
             ];
+
+        if(!empty($orderId))
+            Orders::where('id', $orderId)->update(['probably_return_date' => date('Y-m-d H:i:s', strtotime($paydate->format('d.m.Y')))]);
 
         $paydate->add(new \DateInterval('P1M'));
 
