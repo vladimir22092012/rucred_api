@@ -136,7 +136,7 @@ class PaymentSchedule extends Tools
         $paydate = new \DateTime(date('Y-m-' . "$first_pay_day", strtotime($start_date->format('Y-m-d'))));
         $paydate->setDate($paydate->format('Y'), $paydate->format('m'), $first_pay_day);
 
-        if ($start_date > $paydate || date_diff($paydate, $start_date)->days <= $free_period)
+        if ($start_date > $paydate)
             $paydate->add(new \DateInterval('P1M'));
 
         $annoouitet_pay = $probably_return_sum;
