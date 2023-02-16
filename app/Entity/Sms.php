@@ -84,6 +84,7 @@ class Sms
         $phone = $request['phone'];
         $code = $request['code'];
         $step = $request['step'];
+        $typeClient = $request['typeClient'];
 
         if (empty($phone))
             return response('Не заполнен параметр phone', 400);
@@ -142,6 +143,9 @@ class Sms
             return response(['stage' => $user->stage_registration, 'token' => $newToken], 302);
         elseif (!empty($user) && $step == 'endReg') {
 
+            if (empty($typeClient))
+                return response('Не заполнен параметр typeClient', 400);
+
             Documents::where('order_id', $order->id)->delete();
 
             Users::where('id', $user->id)->update(['stage_registration' => 8]);
@@ -149,6 +153,31 @@ class Sms
             Documents::createDocsForRegistration($userId, $order->id);
             Documents::createDocsAfterRegistrarion($userId, $order->id);
             Documents::createDocsEndRegistrarion($userId, $order->id);
+
+            if ($typeClient == 'new') {
+                $documents = Documents::where('order_id', $order->id)->get();
+                $lastAsp = AspCode::where('order_id', $order->id)->orderBy('id', 'DESC')->first();
+
+                $lastPak = [
+                    'INDIVIDUALNIE_USLOVIA_ONL',
+                    'GRAFIK_OBSL_MKR',
+                    'PERECHISLENIE_ZAEMN_SREDSTV',
+                    'ZAYAVLENIE_ZP_V_SCHET_POGASHENIYA_MKR',
+                    'OBSHIE_USLOVIYA'
+                ];
+
+                foreach ($documents as $document) {
+                    if (in_array($document->type, $lastPak))
+                        Documents::where('id', $document->id)->update(['asp_id' => $lastAsp->id]);
+                }
+
+                $middleAsp = AspCode::find($lastAsp->id - 1);
+
+                foreach ($documents as $document) {
+                    if (!in_array($document->type, $lastPak))
+                        Documents::where('id', $document->id)->update(['asp_id' => $middleAsp->id]);
+                }
+            }
 
             Orders::where('id', $order->id)->update(['status' => 0]);
 
