@@ -120,12 +120,14 @@ class Sms
         if (!empty($userId)) {
             $uid = rand(000000000, 999999999);
 
+            $order = Orders::getUnfinished($userId);
+
             $aspData = [
                 'user_id' => $userId,
-                'order_id' => null,
                 'code' => $code,
                 'recepient' => $phone,
                 'type' => 'sms',
+                'order_id' => !empty($order) ? $order->id : null,
                 'created' => date('Y-m-d H:i:s'),
                 'uid' => $uid
             ];
@@ -139,11 +141,8 @@ class Sms
         elseif (!empty($user) && $user->stage_registration != 8 && $step == 'reg')
             return response(['stage' => $user->stage_registration, 'token' => $newToken], 302);
         elseif (!empty($user) && $step == 'endReg') {
-            $order = Orders::getUnfinished($userId);
 
             Documents::where('order_id', $order->id)->delete();
-
-            $aspCode->update(['order_id' => $order->id]);
 
             Users::where('id', $user->id)->update(['stage_registration' => 8]);
 
@@ -155,18 +154,18 @@ class Sms
 
             $communicationTheme = CommunicationTheme::find(18);
             $ticket = [
-                'creator'           => 0,
+                'creator' => 0,
                 //'creator_company'   => 2,
-                'client_lastname'   => $user->lastname,
-                'client_firstname'  => $user->firstname,
+                'client_lastname' => $user->lastname,
+                'client_firstname' => $user->firstname,
                 'client_patronymic' => $user->patronymic,
-                'head'              => $communicationTheme->head,
-                'text'              => $communicationTheme->text,
-                'theme_id'          => 18,
-                'company_id'        => $order->company_id,
-                'group_id'          => 2,//$order->group_id,
-                'order_id'          => $order->id,
-                'status'            => 0
+                'head' => $communicationTheme->head,
+                'text' => $communicationTheme->text,
+                'theme_id' => 18,
+                'company_id' => $order->company_id,
+                'group_id' => 2,//$order->group_id,
+                'order_id' => $order->id,
+                'status' => 0
             ];
 
             $tiketId = Ticket::insertGetId($ticket);
@@ -174,8 +173,8 @@ class Sms
             //Сообщение в тикет
             $message =
                 [
-                    'message'    => $communicationTheme->text,
-                    'ticket_id'  => $tiketId,
+                    'message' => $communicationTheme->text,
+                    'ticket_id' => $tiketId,
                     'manager_id' => 0
                 ];
 
@@ -183,7 +182,7 @@ class Sms
 
             //Добавляем в расписание крон
             $cron = [
-                'ticket_id'    => $tiketId,
+                'ticket_id' => $tiketId,
                 'is_complited' => 0
             ];
             NotificationCron::insert($cron);
@@ -200,7 +199,7 @@ class Sms
 
         $phone = self::clear_phone($phone);
 
-        $url = 'http://smsc.ru/sys/send.php?login='.$login.'&psw='.$password.'&phones='.$phone.'&mes='.$message.'';
+        $url = 'http://smsc.ru/sys/send.php?login=' . $login . '&psw=' . $password . '&phones=' . $phone . '&mes=' . $message . '';
 
         $resp = file_get_contents($url);
 
