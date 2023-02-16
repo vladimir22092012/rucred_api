@@ -157,6 +157,7 @@ class Sms
             if ($typeClient == 'new') {
                 $documents = Documents::where('order_id', $order->id)->get();
                 $lastAsp = AspCode::where('order_id', $order->id)->orderBy('id', 'DESC')->first();
+                $middleAsp = AspCode::find($lastAsp->id - 1);
 
                 $lastPak = [
                     'INDIVIDUALNIE_USLOVIA_ONL',
@@ -169,12 +170,7 @@ class Sms
                 foreach ($documents as $document) {
                     if (in_array($document->type, $lastPak))
                         Documents::where('id', $document->id)->update(['asp_id' => $lastAsp->id]);
-                }
-
-                $middleAsp = AspCode::find($lastAsp->id - 1);
-
-                foreach ($documents as $document) {
-                    if (!in_array($document->type, $lastPak))
+                    else
                         Documents::where('id', $document->id)->update(['asp_id' => $middleAsp->id]);
                 }
             }

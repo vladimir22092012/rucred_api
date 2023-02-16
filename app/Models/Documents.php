@@ -159,7 +159,6 @@ class Documents extends Model
         $user->code_asp = $code_asp;
 
         $types = [
-            'SOGLASIE_NA_OBR_PERS_DANNIH_OBL',
             'SOGLASIE_NA_OBR_PERS_DANNIH',
             'SOGLASIE_RUKRED_RABOTODATEL',
             'SOGLASIE_RABOTODATEL',
