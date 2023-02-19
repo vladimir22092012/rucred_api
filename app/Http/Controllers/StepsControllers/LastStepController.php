@@ -199,7 +199,8 @@ class LastStepController extends StepsController
 
         $userData = [
             'profunion'          => $profunion,
-            'pdn'                => $pdn
+            'pdn'                => $pdn,
+            'pdn_time'           => time(),
         ];
 
         Users::where('id', $userId)->update($userData);
