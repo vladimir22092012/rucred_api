@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Models\AspCode;
 use App\Models\CommunicationTheme;
+use App\Models\Contracts;
 use App\Models\Documents;
 use App\Models\NotificationCron;
 use App\Models\Orders;
@@ -176,6 +177,7 @@ class Sms
             }
 
             Orders::where('id', $order->id)->update(['status' => 0]);
+            Contracts::where('order_id', $order->id)->update(['deal_date' => date('Y-m-d H:i:s')]);
 
             $communicationTheme = CommunicationTheme::find(18);
             $ticket = [
