@@ -119,6 +119,9 @@ class RequisitesController extends AccountController
         if ($user->inn == $innHolder && $userFio != $holder)
             return response('При получении займа на счет третьего лица, ваш ИНН не должен совпадать с ИНН держателя счета', 406);
 
+        if ($user->inn != $innHolder && $userFio == $holder)
+            return response('ФИО владельца счёта совпадает с ФИО заёмщика, в таком случае, ИНН заёмщика и ИНН держателя счёта должны совпадать', 406);
+
         //Cбрасываем предудущий выбор счета по умолчанию
         BankRequisite::setZeroDefault(self::$userId);
 
