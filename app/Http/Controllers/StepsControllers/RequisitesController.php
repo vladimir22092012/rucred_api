@@ -24,6 +24,7 @@ class RequisitesController extends StepsController
             'bik' => 'БИК обязателен к заполнению',
             'holder' => 'ФИО владельца обязательно к заполнению',
             'correspondent_acc' => 'К/С обязателен к заполнению',
+            'inn_holder' => 'ИНН держателя счета обязателен к заполнению'
         ];
 
         //Проверка на обязательные поля в запросе
@@ -36,12 +37,20 @@ class RequisitesController extends StepsController
         $number = $request['number'];
         $name = $request['name'];
         $bik = $request['bik'];
-        $holder = $request['holder'];
+        $holder = strtoupper($request['holder']);
         $correspondent_acc = $request['correspondent_acc'];
         $orderId = $request['orderId'] ?? '';
+        $innHolder = $request['inn_holder'];
 
         //Проверка на дубликат
         $checkNumber = BankRequisite::checkNumber($number);
+
+        //Проверка чтобы не совпадал ИНН клиента и Держателя счета
+        $user = Users::find($userId);
+        $userFio = $user->lastname.' '.$user->firstname.' '.$user->patronymic;
+
+        if ($user->inn == $innHolder && $userFio != $holder)
+            return response('При получении займа на счет третьего лица, ваш ИНН не должен совпадать с ИНН держателя счета', 406);
 
         if ($checkNumber && ($checkNumber->user_id != $userId))
             return response('Такой счет уже существует', 406);
@@ -57,6 +66,7 @@ class RequisitesController extends StepsController
             'bik' => $bik,
             'holder' => $holder,
             'correspondent_acc' => $correspondent_acc,
+            'inn_holder' => $innHolder,
             'default' => 1
         ];
 
@@ -113,7 +123,7 @@ class RequisitesController extends StepsController
         //Обязательные поля => текст ошибки
         $requiredParams = [
             'pan' => 'Номер карты обязателен к заполнению',
-            'expdate' => 'Дата окончания карты обязательна к заполнению',
+            'expdate' => 'Дата окончания карты обязательна к заполнению'
         ];
 
         //Проверка на обязательные поля в запросе
@@ -126,6 +136,7 @@ class RequisitesController extends StepsController
         $pan = $request['pan'];
         $expdate = $request['expdate'];
         $default = $request['default'] ?? 0;
+
 
         //Проверка на дубликат
         $checkPan = Cards::checkPan($pan);

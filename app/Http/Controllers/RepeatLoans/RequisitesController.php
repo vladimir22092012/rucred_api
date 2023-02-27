@@ -24,6 +24,7 @@ class RequisitesController extends RepeatLoansController
             'bik' => 'БИК обязателен к заполнению',
             'holder' => 'ФИО владельца обязательно к заполнению',
             'correspondent_acc' => 'К/С обязателен к заполнению',
+            'inn_holder' => 'ИНН держателя счета обязателен к заполнению'
         ];
 
         //Проверка на обязательные поля в запросе
@@ -36,9 +37,17 @@ class RequisitesController extends RepeatLoansController
         $number = $request['number'];
         $name = $request['name'];
         $bik = $request['bik'];
-        $holder = $request['holder'];
+        $holder = strtoupper($request['holder']);
         $correspondent_acc = $request['correspondent_acc'];
         $orderId = $request['orderId'] ?? '';
+        $innHolder = $request['inn_holder'];
+
+        //Проверка чтобы не совпадал ИНН клиента и Держателя счета
+        $user = Users::find($userId);
+        $userFio = $user->lastname.' '.$user->firstname.' '.$user->patronymic;
+
+        if ($user->inn == $innHolder && $userFio != $holder)
+            return response('При получении займа на счет третьего лица, ваш ИНН не должен совпадать с ИНН держателя счета', 406);
 
         //Проверка на дубликат
         $checkNumber = BankRequisite::checkNumber($number);
@@ -57,6 +66,7 @@ class RequisitesController extends RepeatLoansController
             'bik' => $bik,
             'holder' => $holder,
             'correspondent_acc' => $correspondent_acc,
+            'inn_holder' => $innHolder,
             'default' => 1
         ];
 

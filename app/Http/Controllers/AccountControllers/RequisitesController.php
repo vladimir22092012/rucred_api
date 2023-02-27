@@ -4,6 +4,7 @@ namespace App\Http\Controllers\AccountControllers;
 
 use App\Models\BankRequisite;
 use App\Models\Cards;
+use App\Models\Users;
 use Illuminate\Http\Request;
 
 class RequisitesController extends AccountController
@@ -89,6 +90,7 @@ class RequisitesController extends AccountController
             'bik'                => 'БИК обязателен к заполнению',
             'holder'             => 'ФИО владельца обязательно к заполнению',
             'correspondent_acc'  => 'К/С обязателен к заполнению',
+            'inn_holder'         => 'ИНН держателя счета обязателен к заполнению'
         ];
 
         //Проверка на обязательные поля в запросе
@@ -106,8 +108,16 @@ class RequisitesController extends AccountController
         $number            = $request['number'];
         $name              = $request['name'];
         $bik               = $request['bik'];
-        $holder            = $request['holder'];
+        $holder            = strtoupper($request['holder']);
         $correspondent_acc = $request['correspondent_acc'];
+        $innHolder         = $request['inn_holder'];
+
+        //Проверка чтобы не совпадал ИНН клиента и Держателя счета
+        $user = Users::find(self::$userId);
+        $userFio = $user->lastname.' '.$user->firstname.' '.$user->patronymic;
+
+        if ($user->inn == $innHolder && $userFio != $holder)
+            return response('При получении займа на счет третьего лица, ваш ИНН не должен совпадать с ИНН держателя счета', 406);
 
         //Cбрасываем предудущий выбор счета по умолчанию
         BankRequisite::setZeroDefault(self::$userId);
