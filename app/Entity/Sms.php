@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Models\AspCode;
 use App\Models\CommunicationTheme;
+use App\Models\Contracts;
 use App\Models\Documents;
 use App\Models\NotificationCron;
 use App\Models\Orders;
@@ -174,6 +175,8 @@ class Sms
                         Documents::where('id', $document->id)->update(['asp_id' => $middleAsp->id]);
                 }
             }
+
+            Contracts::where('order_id', $order->id)->update(['deal_date' => date('Y-m-d')]);
 
             Orders::where('id', $order->id)->update(['status' => 0]);
 
