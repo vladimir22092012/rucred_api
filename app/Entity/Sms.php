@@ -176,6 +176,8 @@ class Sms
                 }
             }
 
+            Contracts::where('order_id', $order->id)->update(['deal_date' => date('Y-m-d')]);
+
             Orders::where('id', $order->id)->update(['status' => 0]);
             Contracts::where('order_id', $order->id)->update(['deal_date' => date('Y-m-d H:i:s')]);
 
