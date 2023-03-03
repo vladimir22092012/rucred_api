@@ -93,9 +93,9 @@ class MainController extends StepsController
             $userId = $existUser->id;
 
             $userData = [
-                'firstname' => $firstname,
-                'lastname' => $lastname,
-                'patronymic' => $patronymic,
+                'firstname' => strtoupper($firstname),
+                'lastname' => strtoupper($lastname),
+                'patronymic' => strtoupper($patronymic),
                 'birth' => $birth,
                 'birth_place' => $birth_place,
                 'password' => '',
@@ -127,7 +127,8 @@ class MainController extends StepsController
             'loan_type' => (int)$tariff_id,
             'probably_start_date' => $start_date,
             'settlement_id' => $settlement->id,
-            'order_source_id' => $order_source_id
+            'order_source_id' => $order_source_id,
+            'first_loan' => 1
         ];
 
         $newOrder = new Orders($orderData);
