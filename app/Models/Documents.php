@@ -186,7 +186,9 @@ class Documents extends Model
         $contacts = Contacts::getContacts($userId);
 
         $payment_schedule = PaymentsSchedules::getSchedule($order->id);
-        $order->payment_schedule = $payment_schedule->toArray();
+        if ($payment_schedule) {
+            $order->payment_schedule = $payment_schedule->toArray();
+        }
         $order->order_id = $order->id;
 
         //ООО МКК "РУССКОЕ КРЕДИТНОЕ ОБЩЕСТВО"
@@ -235,7 +237,9 @@ class Documents extends Model
         $contacts = Contacts::getContacts($userId);
 
         $payment_schedule = PaymentsSchedules::getSchedule($order->id);
-        $order->payment_schedule = $payment_schedule->toArray();
+        if ($payment_schedule) {
+            $order->payment_schedule = $payment_schedule->toArray();
+        }
         $order->order_id = $order->id;
 
         //ООО МКК "РУССКОЕ КРЕДИТНОЕ ОБЩЕСТВО"
