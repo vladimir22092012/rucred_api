@@ -43,6 +43,10 @@ class LastStepController extends StepsController
         $tariff_id     = $order->loan_type;
         $group_id      = $order->group_id;
 
+        if (!$tariff_id || empty($tariff_id)) {
+            return response(['error' => 'Нет выбранного тарифа'], 400);
+        }
+
         $tariff = Loantypes::find($tariff_id);
 
         $defaultSettlement = OrganisationSettlement::getDefault();
