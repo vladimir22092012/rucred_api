@@ -222,6 +222,21 @@ class LastStepController extends RepeatLoansController
         Scoring::addScorings($userId, $order->id);
 
         //Создание контракта
+
+        $contractData = [
+            'amount' => $order->amount,
+            'period' => $orderPeriod,
+            'base_percent' => $percents,
+            'status' => 0,
+            'loan_body_summ' => $order->amount,
+            'loan_percents_summ' => 0,
+            'loan_peni_summ' => 0
+        ];
+        $contract = Contracts::updateOrCreate(
+            ['user_id' => $userId, 'order_id' => $order->id],
+            $contractData
+        );
+
         $number = $order->uid;
         $number = explode(' ', $number);
         $count_contracts = Contracts::where('user_id', $userId)->whereIn('status', [2, 3, 4])->count();
@@ -236,20 +251,7 @@ class LastStepController extends RepeatLoansController
 
         ProjectContractNumber::updateOrCreate(['orderId' => $order->id, 'userId' => $userId], ['uid' => $new_number]);
 
-        $contractData = [
-            'number' => $new_number,
-            'amount' => $order->amount,
-            'period' => $orderPeriod,
-            'base_percent' => $percents,
-            'status' => 0,
-            'loan_body_summ' => $order->amount,
-            'loan_percents_summ' => 0,
-            'loan_peni_summ' => 0
-        ];
-        $contract = Contracts::updateOrCreate(
-            ['user_id' => $userId, 'order_id' => $order->id],
-            $contractData
-        );
+        Contracts::where('id', $contract->id)->update(['number' => $new_number]);
 
         Orders::updateOrCreate(['id' => $order->id], ['contract_id' => $contract->id]);
 
