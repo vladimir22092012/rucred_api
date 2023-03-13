@@ -222,22 +222,8 @@ class LastStepController extends RepeatLoansController
         Scoring::addScorings($userId, $order->id);
 
         //Создание контракта
-        $number = $order->uid;
-        $number = explode(' ', $number);
-        $count_contracts = Contracts::where('user_id', $userId)->whereIn('status', [2, 3, 4])->count();
-
-        if (!empty($count_contracts)) {
-            $count_contracts = str_pad($count_contracts + 1, 2, '0', STR_PAD_LEFT);
-        } else {
-            $count_contracts = '01';
-        }
-
-        $new_number = "$number[0] $tariff->number $number[1] $count_contracts";
-
-        ProjectContractNumber::updateOrCreate(['orderId' => $order->id, 'userId' => $userId], ['uid' => $new_number]);
 
         $contractData = [
-            'number' => $new_number,
             'amount' => $order->amount,
             'period' => $orderPeriod,
             'base_percent' => $percents,
@@ -250,6 +236,22 @@ class LastStepController extends RepeatLoansController
             ['user_id' => $userId, 'order_id' => $order->id],
             $contractData
         );
+
+        $number = $order->uid;
+        $number = explode(' ', $number);
+        $count_contracts = Contracts::where('user_id', $userId)->whereIn('status', [2, 3, 4])->count();
+
+        if (!empty($count_contracts)) {
+            $count_contracts = str_pad($count_contracts, 2, '0', STR_PAD_LEFT);
+        } else {
+            $count_contracts = '01';
+        }
+
+        $new_number = "$number[0] $tariff->number $number[1] $count_contracts";
+
+        ProjectContractNumber::updateOrCreate(['orderId' => $order->id, 'userId' => $userId], ['uid' => $new_number]);
+
+        Contracts::where('id', $contract->id)->update(['number' => $new_number]);
 
         Orders::updateOrCreate(['id' => $order->id], ['contract_id' => $contract->id]);
 
