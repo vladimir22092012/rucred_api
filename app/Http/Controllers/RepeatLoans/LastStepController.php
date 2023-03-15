@@ -242,7 +242,7 @@ class LastStepController extends RepeatLoansController
         $count_contracts = Contracts::where('user_id', $userId)->whereIn('status', [2, 3, 4])->count();
 
         if (!empty($count_contracts)) {
-            $count_contracts = str_pad($count_contracts, 2, '0', STR_PAD_LEFT);
+            $count_contracts = str_pad($count_contracts + 1, 2, '0', STR_PAD_LEFT);
         } else {
             $count_contracts = '01';
         }
