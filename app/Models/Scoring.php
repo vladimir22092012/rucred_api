@@ -12,12 +12,12 @@ class Scoring extends Model
     public $timestamps = false;
 
     public static function addScorings($userId, $orderId) {
-        
+
         $scoringTypes = ScoringType::getTypes();
 
         foreach ($scoringTypes as $key => $scoring) {
             //запускаем только бесплатные скоринги
-            if ($scoring->is_paid == 0) {
+            if ($scoring->name == 'fns' && $scoring->is_paid == 0) {
                 $data = [
                     'user_id'  => $userId,
                     'order_id' => $orderId,
