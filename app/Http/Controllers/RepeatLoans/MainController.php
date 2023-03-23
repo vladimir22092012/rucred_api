@@ -35,9 +35,9 @@ class MainController extends RepeatLoansController
             $needCorrectPassport = 1;
 
         $userData = [
-            'firstname' => $firstname,
-            'lastname' => $lastname,
-            'patronymic' => $patronymic,
+            'firstname' => strtoupper($firstname),
+            'lastname' => strtoupper($lastname),
+            'patronymic' => strtoupper($patronymic),
             'passport_changed' => $needCorrectPassport
         ];
 
