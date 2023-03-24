@@ -41,7 +41,7 @@ class PaymentSchedule extends Tools
             $body_pay = 0;
             $sum_pay = $loan_percents_pay;
         } else {
-            $loan_percents_pay = round($amount * ($percent / 100) * date_diff($paydate, $start_date)->days);
+            $loan_percents_pay = round($amount * ($percent / 100) * date_diff($paydate, $start_date)->days, 2);
             $body_pay = $amount;
             $sum_pay = $loan_percents_pay + $body_pay;
         }
