@@ -74,9 +74,9 @@ class MainController extends StepsController
             $number = implode($number);
 
         $userData = [
-            'firstname' => strtoupper($firstname),
-            'lastname' => strtoupper($lastname),
-            'patronymic' => strtoupper($patronymic),
+            'firstname' => mb_strtoupper($firstname),
+            'lastname' => mb_strtoupper($lastname),
+            'patronymic' => mb_strtoupper($patronymic),
             'birth' => $birth,
             'birth_place' => $birth_place,
             'password' => '',
@@ -93,9 +93,9 @@ class MainController extends StepsController
             $userId = $existUser->id;
 
             $userData = [
-                'firstname' => strtoupper($firstname),
-                'lastname' => strtoupper($lastname),
-                'patronymic' => strtoupper($patronymic),
+                'firstname' => mb_strtoupper($firstname),
+                'lastname' => mb_strtoupper($lastname),
+                'patronymic' => mb_strtoupper($patronymic),
                 'birth' => $birth,
                 'birth_place' => $birth_place,
                 'password' => '',
