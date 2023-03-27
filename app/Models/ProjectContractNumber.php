@@ -24,11 +24,15 @@ class ProjectContractNumber extends Model
         try {
             $count_orders = Orders::query()
                 ->where('user_id', '=', $user_id)
-                ->whereNotIn('status', [8,11,15,16,20])
+                ->whereNotIn('status', [8,11,15,16,20,12])
                 ->count();
 
-            $count_contracts = $count_orders + 1;
-            $count_contracts = str_pad($count_contracts, 2, '0', STR_PAD_LEFT);
+            if ($count_orders <= 0) {
+                $count_contracts = '01';
+            } else {
+                $count_contracts = $count_orders + 1;
+                $count_contracts = str_pad($count_contracts, 2, '0', STR_PAD_LEFT);
+            }
         } catch (\Exception $exception) {
             $count_contracts = "01";
         }
