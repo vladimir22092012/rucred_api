@@ -33,8 +33,11 @@ class PaymentSchedule extends Tools
 
         $paydate = Utils::processing('check_pay_date', new \DateTime($paydate->format('Y-m-' . $first_pay_day)));
 
-        if(date_diff($paydate, $start_date)->days <= $free_period)
+        if(date_diff($paydate, $start_date)->days <= $free_period) {
             $paydate->add(new \DateInterval('P1M'));
+            $paydate = Utils::processing('check_pay_date', new \DateTime($paydate->format('d-m-Y')));
+        }
+
 
         if (date_diff($paydate, $start_date)->days > $free_period && date_diff($paydate, $start_date)->days < $min_period) {
             $loan_percents_pay = round(($percent / 100) * $amount * date_diff($paydate, $start_date)->days, 2);
