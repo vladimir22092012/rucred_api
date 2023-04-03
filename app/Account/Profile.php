@@ -3,6 +3,7 @@
 namespace App\Account;
 
 use App\Models\Addresses;
+use App\Models\Branch;
 use App\Models\Companies;
 use App\Models\Users;
 
@@ -29,6 +30,13 @@ class Profile extends Account
         if (!empty($user->company_id)) {
             $company = Companies::find($user->company_id);
 
+            $payday = 10;
+
+            if (!empty($user->branche_id)) {
+                $branche = Branch::find($user->branche_id);
+                $payday = $branche->payday;
+            }
+
             $res['work'] =
                 [
                     'workplace' => $company->name,
@@ -37,7 +45,8 @@ class Profile extends Account
                     'inn' => $company->inn,
                     'ogrn' => $company->ogrn,
                     'kpp' => $company->kpp,
-                    'eio_fio' => $company->eio_fio
+                    'eio_fio' => $company->eio_fio,
+                    'payday' => $payday
                 ];
         }
 
