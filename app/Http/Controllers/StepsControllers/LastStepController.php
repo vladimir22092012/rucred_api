@@ -233,7 +233,7 @@ class LastStepController extends StepsController
         //Создание контракта
         $number = $order->uid;
         $number = explode(' ', $number);
-        $new_number = ProjectContractNumber::getNewNumber($number[0], '', $tariff->number, $number[1], $userId);
+        $new_number = ProjectContractNumber::getNewNumber($number[0], '', $tariff->number, $number[1], $userId, $order);
 
         ProjectContractNumber::updateOrCreate(['orderId' => $order->id, 'userId' => $userId], ['uid' => $new_number]);
 
