@@ -85,4 +85,17 @@ class Utils extends Tools
 
         return $date;
     }
+
+    private static function check_pay_date_array($date)
+    {
+        $checkDate = WeekendCalendar::where('date', $date->format('Y-m-d'))->first();
+        $weekend = 0;
+        if (!empty($checkDate)) {
+            $weekend++;
+            $date->sub(new \DateInterval('P1D'));
+            self::check_pay_date($date);
+        }
+
+        return [$date, $weekend];
+    }
 }

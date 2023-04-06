@@ -149,7 +149,13 @@ class PaymentSchedule extends Tools
 
         $count_days_this_month = date('t', strtotime($start_date->format('Y-m-d')));
 
-        $paydate = Utils::processing('check_pay_date', new \DateTime($paydate->format('Y-m-' . $first_pay_day)));
+        $temp_annoouitet_summ = 0;
+
+        list($paydate, $weekend) = Utils::processing('check_pay_date_array', new \DateTime($paydate->format('Y-m-' . $first_pay_day)));
+
+        if ($weekend > 0) {
+            $temp_annoouitet_summ = ($weekend) * $rest_sum * ($percent / 100);
+        }
 
         if (date_diff($paydate, $start_date)->days <= $free_period) {
             $plus_loan_percents = round(($percent / 100) * $amount * date_diff($paydate, $start_date)->days, 2);
@@ -157,7 +163,12 @@ class PaymentSchedule extends Tools
             $loan_percents_pay = round(($rest_sum * $percent_per_month) + $plus_loan_percents, 2);
             $body_pay = $sum_pay - $loan_percents_pay;
             $paydate->add(new \DateInterval('P1M'));
-            $paydate = Utils::processing('check_pay_date', new \DateTime($paydate->format('Y-m-d')));
+            list($tempPayDate, $tempWeekend) = Utils::processing('check_pay_date', new \DateTime($paydate->format('Y-m-d')));
+            if ($tempWeekend > 0) {
+                $paydate->sub(new \DateInterval('P'.$tempWeekend.'D'));
+                $loan_percents_pay -= ($tempWeekend) * $rest_sum * ($percent / 100);
+                $sum_pay -= ($tempWeekend) * $rest_sum * ($percent / 100);
+            }
             $iteration++;
         } elseif (date_diff($paydate, $start_date)->days >= $min_period && date_diff($paydate, $start_date)->days < $count_days_this_month) {
             $minus_percents = ($percent / 100) * $amount * ($count_days_this_month - date_diff($paydate, $start_date)->days);
@@ -169,6 +180,10 @@ class PaymentSchedule extends Tools
         } elseif (date_diff($paydate, $start_date)->days >= $count_days_this_month) {
             $sum_pay = $annoouitet_pay;
             $loan_percents_pay = round($rest_sum * $percent_per_month, 2, PHP_ROUND_HALF_DOWN);
+            $days = date_diff($paydate, $start_date)->days - $count_days_this_month;
+            if ($days > 0) {
+                $temp_annoouitet_summ = $days * (($percent / 100) * $amount);
+            }
             $body_pay = round($sum_pay - $loan_percents_pay, 2);
             $iteration++;
         } else {
@@ -179,8 +194,8 @@ class PaymentSchedule extends Tools
 
         $payment_schedule[$paydate->format('d.m.Y')] =
             [
-                'pay_sum' => $sum_pay,
-                'loan_percents_pay' => $loan_percents_pay,
+                'pay_sum' => $sum_pay + $temp_annoouitet_summ,
+                'loan_percents_pay' => $loan_percents_pay + $temp_annoouitet_summ,
                 'loan_body_pay' => $body_pay,
                 'comission_pay' => 0.00,
                 'rest_pay' => $rest_sum -= $body_pay
