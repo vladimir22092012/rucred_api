@@ -19,11 +19,12 @@ class ProjectContractNumber extends Model
      * @param $user_id
      * @return string
      */
-    public static function getNewNumber($group_number, $company_number, $loantype_number, $personal_number, $user_id)
+    public static function getNewNumber($group_number, $company_number, $loantype_number, $personal_number, $user_id, $order)
     {
         try {
             $count_orders = Orders::query()
                 ->where('user_id', '=', $user_id)
+                ->where('id', '!=', $order->id)
                 ->whereNotIn('status', [8,11,15,16,20,12])
                 ->count();
 

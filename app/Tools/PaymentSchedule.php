@@ -157,6 +157,7 @@ class PaymentSchedule extends Tools
             $loan_percents_pay = round(($rest_sum * $percent_per_month) + $plus_loan_percents, 2);
             $body_pay = $sum_pay - $loan_percents_pay;
             $paydate->add(new \DateInterval('P1M'));
+            $paydate = Utils::processing('check_pay_date', new \DateTime($paydate->format('Y-m-d')));
             $iteration++;
         } elseif (date_diff($paydate, $start_date)->days >= $min_period && date_diff($paydate, $start_date)->days < $count_days_this_month) {
             $minus_percents = ($percent / 100) * $amount * ($count_days_this_month - date_diff($paydate, $start_date)->days);
