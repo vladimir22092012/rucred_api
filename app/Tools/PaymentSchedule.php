@@ -163,7 +163,7 @@ class PaymentSchedule extends Tools
             $loan_percents_pay = round(($rest_sum * $percent_per_month) + $plus_loan_percents, 2);
             $body_pay = $sum_pay - $loan_percents_pay;
             $paydate->add(new \DateInterval('P1M'));
-            list($tempPayDate, $tempWeekend) = Utils::processing('check_pay_date', new \DateTime($paydate->format('Y-m-d')));
+            list($tempPayDate, $tempWeekend) = Utils::processing('check_pay_date_array', new \DateTime($paydate->format('Y-m-d')));
             if ($tempWeekend > 0) {
                 $paydate->sub(new \DateInterval('P'.$tempWeekend.'D'));
                 $loan_percents_pay -= ($tempWeekend) * $rest_sum * ($percent / 100);
