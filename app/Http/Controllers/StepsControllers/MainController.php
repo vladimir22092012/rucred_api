@@ -44,9 +44,14 @@ class MainController extends StepsController
         $patronymic = $request['patronymic'] ?? '';  //Отчество
         $source = $request['source'] ?? 'site';
 
+        $error = false;
 
         $tariff = Loantypes::find($tariff_id);
-        $error = false;
+
+        if (!$tariff) {
+            $error = 'Тариф не найден!';
+        }
+
 
         if ($amount < $tariff->min_amount) {
             $error = 'Сумма займа не может быть меньше ' . $tariff->min_amount;

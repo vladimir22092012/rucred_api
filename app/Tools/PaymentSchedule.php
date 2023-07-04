@@ -25,13 +25,11 @@ class PaymentSchedule extends Tools
         //адаптированный код из црм
         $rest_sum = $amount;
         $start_date = new \DateTime(date('Y-m-d', strtotime($start_date)));
+
         $paydate = new \DateTime(date('Y-m-' . "$first_pay_day", strtotime($start_date->format('Y-m-d'))));
         $paydate->setDate($paydate->format('Y'), $paydate->format('m'), $first_pay_day);
-
         if ($start_date > $paydate || date_diff($paydate, $start_date)->days <= $free_period)
             $paydate->add(new \DateInterval('P1M'));
-
-        $paydate = Utils::processing('check_pay_date', new \DateTime($paydate->format('Y-m-' . $first_pay_day)));
 
         if(date_diff($paydate, $start_date)->days <= $free_period) {
             $paydate->add(new \DateInterval('P1M'));
@@ -141,7 +139,6 @@ class PaymentSchedule extends Tools
 
         if ($start_date > $paydate)
             $paydate->add(new \DateInterval('P1M'));
-
         $annoouitet_pay = $probably_return_sum;
         $annoouitet_pay = round($annoouitet_pay, 2);
 
@@ -151,11 +148,6 @@ class PaymentSchedule extends Tools
 
         $temp_annoouitet_summ = 0;
 
-        list($paydate, $weekend) = Utils::processing('check_pay_date_array', new \DateTime($paydate->format('Y-m-' . $first_pay_day)));
-
-        if ($weekend > 0) {
-            $temp_annoouitet_summ = ($weekend) * $rest_sum * ($percent / 100);
-        }
 
         if (date_diff($paydate, $start_date)->days <= $free_period) {
             $plus_loan_percents = round(($percent / 100) * $amount * date_diff($paydate, $start_date)->days, 2);

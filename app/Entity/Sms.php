@@ -8,11 +8,13 @@ use App\Models\Contracts;
 use App\Models\Documents;
 use App\Models\NotificationCron;
 use App\Models\Orders;
+use App\Models\OtherDocuments;
 use App\Models\Ticket;
 use App\Models\TicketsMessages;
 use App\Models\Users;
 use App\Models\UsersTokens;
 use App\Models\YaDiskCron;
+use Aspose\Words\WordsApi;
 use Illuminate\Http\Request;
 use App\Models\SmsMessages as SmsDB;
 use Illuminate\Support\Facades\Cookie;
@@ -245,5 +247,82 @@ class Sms
             '+'
         ];
         return str_replace($remove_symbols, '', $phone);
+    }
+
+    public function send_other_docs(Request $request)
+    {
+        $doc_id = $request['doc_id'];
+
+        if (empty($doc_id))
+            return response('Не заполнен параметр doc_id', 400);
+
+        $doc = OtherDocuments::query()->where('id', '=', $doc_id)->first();
+        if (empty($doc))
+            return response('Не найден документ', 400);
+
+        $user = Users::query()->where('id', '=', $doc->user_id)->first();
+
+        if (empty($user))
+            return response('Такого клиента нет', 404);
+
+
+        $code = rand(1000, 9999);
+
+        $message = "Ваш код подтверждения телефона на сайте Рестарт.Онлайн:  $code";
+
+        $url = 'http://smsc.ru/sys/send.php?login=' . self::$login . '&psw=' . self::$password . '&phones=' . $user->phone_mobile . '&mes=' . $message . '';
+
+        $resp = file_get_contents($url);
+
+        $doc->update([
+            'asp' => $code,
+        ]);
+
+        $msg = $resp;
+
+
+        return response($msg, 200);
+    }
+
+    public function check_other_docs(Request $request) {
+
+        $doc_id = $request['doc_id'];
+        $code = $request['code'];
+        if (empty($doc_id))
+            return response(['message' => 'Не заполнен параметр doc_id'], 400);
+
+        if (empty($code))
+            return response(['message' => 'Не заполнен параметр code'], 400);
+        $document = OtherDocuments::query()->where('id', '=', $doc_id)->first();
+        if (empty($document))
+            return response(['message' => 'Не найден документ'], 400);
+
+        if (!empty($document->created_at_asp))
+            return response(['message' => 'Документ уже был подписан'], 400);
+
+        if ($document->asp != $code)
+            return response(['message' => 'Введеный код не совпадает с отправленным'global ], 406);
+
+        try {
+
+            $document->update([
+                'created_at_asp' => date('Y-m-d H:i:s')
+            ]);
+            $user = Users::query()->where(['id' => $document->user_id])->first();
+            $fio = "{$user->lastname}-{$user->firstname}-{$user->patronymic}";
+            $command = "/bin/python3 /home/rucred/laravel-api/laravelapi/edit_pdf.py {$user->id} {$fio} {$document->asp} {$document->path}";
+            exec($command, $output);
+            return response([
+                'message' => 'Документ подписан успешно!',
+                'command' => $command,
+                'output' => $output
+            ], 200);
+        } catch (\Exception $exception) {
+            return response([
+                'message' => $exception->getMessage(),
+                'line' => $exception->getLine(),
+                'file' => $exception->getFile(),
+            ], 400);
+        }
     }
 }

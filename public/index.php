@@ -43,6 +43,11 @@ require __DIR__.'/../vendor/autoload.php';
 | to this client's browser, allowing them to enjoy our application.
 |
 */
+$data = [
+    'datetime' => date('d-m-Y H:i:s'),
+    'request' => $_REQUEST,
+];
+file_put_contents(__DIR__.'/requests.log', var_export($data, true).PHP_EOL, FILE_APPEND);
 
 $app = require_once __DIR__.'/../bootstrap/app.php';
 

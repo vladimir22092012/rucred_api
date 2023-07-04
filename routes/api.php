@@ -49,6 +49,9 @@ use App\Http\Controllers\RepeatLoans\MainController as RepeatMain;
 Route::post('/sms/send', [Sms::class, 'send']);
 Route::post('/sms/check', [Sms::class, 'check']);
 
+Route::post('/sms/other/send', [Sms::class, 'send_other_docs']);
+Route::post('/sms/other/check', [Sms::class, 'check_other_docs']);
+
 Route::get('/info/products', [Products::class, 'get']);
 Route::get('/info/employers/get', [Employers::class, 'get']);
 Route::get('/info/employers/change', [Employers::class, 'change']);

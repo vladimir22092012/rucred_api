@@ -17,7 +17,13 @@ class Scoring extends Model
 
         foreach ($scoringTypes as $key => $scoring) {
             //запускаем только бесплатные скоринги
-            if ($scoring->name == 'fns' && $scoring->is_paid == 0) {
+            if (in_array($scoring->name, [
+                'fns',
+                'rfm_first_list',
+                'rfm_second_list',
+                'rfm_third_list',
+                'rfm_fourth_list',
+            ]) && $scoring->is_paid == 0) {
                 $data = [
                     'user_id'  => $userId,
                     'order_id' => $orderId,
