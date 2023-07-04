@@ -301,7 +301,7 @@ class Sms
             return response(['message' => 'Документ уже был подписан'], 400);
 
         if ($document->asp != $code)
-            return response(['message' => 'Введеный код не совпадает с отправленным'global ], 406);
+            return response(['message' => 'Введеный код не совпадает с отправленным'], 406);
 
         try {
 
