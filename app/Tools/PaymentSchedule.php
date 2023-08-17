@@ -28,8 +28,10 @@ class PaymentSchedule extends Tools
 
         $paydate = new \DateTime(date('Y-m-' . "$first_pay_day", strtotime($start_date->format('Y-m-d'))));
         $paydate->setDate($paydate->format('Y'), $paydate->format('m'), $first_pay_day);
-        if ($start_date > $paydate || date_diff($paydate, $start_date)->days <= $free_period)
+        if ($start_date > $paydate || date_diff($paydate, $start_date)->days <= $free_period) {
             $paydate->add(new \DateInterval('P1M'));
+            $paydate = Utils::processing('check_pay_date', new \DateTime($paydate->format('d-m-Y')));
+        }
 
         if(date_diff($paydate, $start_date)->days <= $free_period) {
             $paydate->add(new \DateInterval('P1M'));
@@ -136,9 +138,11 @@ class PaymentSchedule extends Tools
         $start_date = new \DateTime(date('Y-m-d', strtotime($start_date)));
         $paydate = new \DateTime(date('Y-m-' . "$first_pay_day", strtotime($start_date->format('Y-m-d'))));
         $paydate->setDate($paydate->format('Y'), $paydate->format('m'), $first_pay_day);
-
-        if ($start_date > $paydate)
+        if ($start_date > $paydate) {
             $paydate->add(new \DateInterval('P1M'));
+            $paydate = Utils::processing('check_pay_date', new \DateTime($paydate->format('Y-m-d')));
+        }
+
         $annoouitet_pay = $probably_return_sum;
         $annoouitet_pay = round($annoouitet_pay, 2);
 

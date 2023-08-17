@@ -304,19 +304,24 @@ class Sms
             return response(['message' => 'Введеный код не совпадает с отправленным'], 406);
 
         try {
-
-            $document->update([
-                'created_at_asp' => date('Y-m-d H:i:s')
-            ]);
             $user = Users::query()->where(['id' => $document->user_id])->first();
             $fio = "{$user->lastname}-{$user->firstname}-{$user->patronymic}";
-            $command = "/bin/python3 /home/rucred/laravel-api/laravelapi/edit_pdf.py {$user->id} {$fio} {$document->asp} {$document->path}";
-            exec($command, $output);
+            $command = "/bin/python3 /home/rucred-crm/laravel-api/laravelapi/edit_pdf.py {$user->id} {$fio} {$document->asp} {$document->path}";
+            exec($command, $output, $result_code);
+            if (!empty($output) && is_array($output) && end($output) == 'asp complete') {
+                $document->update([
+                    'created_at_asp' => date('Y-m-d H:i:s')
+                ]);
+                return response([
+                    'message' => 'Документ подписан успешно!',
+                    'command' => $command,
+                    'output' => $output
+                ], 200);
+            }
             return response([
-                'message' => 'Документ подписан успешно!',
-                'command' => $command,
+                'message' => 'Документ не подписан!',
                 'output' => $output
-            ], 200);
+            ], 400);
         } catch (\Exception $exception) {
             return response([
                 'message' => $exception->getMessage(),
